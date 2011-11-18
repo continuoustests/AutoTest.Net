@@ -31,7 +31,7 @@ namespace VSMenuKiller
 
                 if (control == null)
                 {
-                    Console.WriteLine("Spesified menu was not found");
+                    Console.WriteLine("Specified menu was not found");
                     return;
                 }
 

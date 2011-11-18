@@ -57,7 +57,7 @@ In there you will find the UppercuT.config and UppercuTx86.config files. Locate 
 line (<property name="microsoft.framework" value="mono-3.5" overwrite="false" />) in
 both files and switch from mono-3.5 to net-3.5.
 
-When done go in and run build and deploy scripts (biuld.sh/build.bat and 
+When done go in and run build and deploy scripts (build.sh/build.bat and 
 deploy.sh/deploy.bat depending on whether you are on Windows(bat) or something else(sh)).
 After running build and deploy scripts you will find the built binaries under the 
 ReleaseBinaries folder.
