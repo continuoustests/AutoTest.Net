@@ -163,13 +163,13 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(ProjectDir)..\..\..\src\AutoTest.Messages\$(OutDir)AutoTest.Messages.dll $(ProjectDir)\bin\AutoTest.Messages.dll
-copy $(ProjectDir)..\..\..\src\AutoTest.Core\$(OutDir)AutoTest.Core.dll $(ProjectDir)\bin\AutoTest.Core.dll
-copy $(ProjectDir)..\..\..\src\AutoTest.UI\$(OutDir)AutoTest.UI.dll $(ProjectDir)\bin\AutoTest.UI.dll
-copy $(ProjectDir)..\..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\$(OutDir)AutoTest.TestRunners.Shared.dll $(ProjectDir)\bin\AutoTest.TestRunners.Shared.dll
-copy $(ProjectDir)..\AutoTest.VS.Util\$(OutDir)AutoTest.VS.Util.dll $(ProjectDir)\bin\AutoTest.VS.Util.dll
-copy $(ProjectDir)..\..\..\lib\Castle.Windsor\Castle.Core.dll $(ProjectDir)\bin\Castle.Core.dll
-copy $(ProjectDir)..\..\..\lib\Castle.Windsor\Castle.Windsor.dll $(ProjectDir)\bin\Castle.Windsor.dll</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)..\..\..\src\AutoTest.Messages\$(OutDir)AutoTest.Messages.dll" "$(ProjectDir)\bin\AutoTest.Messages.dll"
+copy "$(ProjectDir)..\..\..\src\AutoTest.Core\$(OutDir)AutoTest.Core.dll" "$(ProjectDir)\bin\AutoTest.Core.dll"
+copy "$(ProjectDir)..\..\..\src\AutoTest.UI\$(OutDir)AutoTest.UI.dll" "$(ProjectDir)\bin\AutoTest.UI.dll"
+copy "$(ProjectDir)..\..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\$(OutDir)AutoTest.TestRunners.Shared.dll" "$(ProjectDir)\bin\AutoTest.TestRunners.Shared.dll"
+copy "$(ProjectDir)..\AutoTest.VS.Util\$(OutDir)AutoTest.VS.Util.dll" "$(ProjectDir)\bin\AutoTest.VS.Util.dll"
+copy "$(ProjectDir)..\..\..\lib\Castle.Windsor\Castle.Core.dll" "$(ProjectDir)\bin\Castle.Core.dll"
+copy "$(ProjectDir)..\..\..\lib\Castle.Windsor\Castle.Windsor.dll" "$(ProjectDir)\bin\Castle.Windsor.dll"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions />
   <Target Name="AfterBuild">
