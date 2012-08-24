@@ -218,17 +218,17 @@ namespace AutoTest.Test.Core.FileSystem
                 return;
 			_configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
-			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
+			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeFalse();
 		}
 
         [Test]
-        public void Should_not_glob_case_sensitive_on_non_unix_platforms()
+        public void Should_glob_case_insensitive_on_non_unix_platforms()
         {
-            if (!OS.IsPosix)
+            if (OS.IsPosix)
                 return;
             _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
             _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
-            _validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeFalse();
+            _validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
         }
 		
 		[Test]

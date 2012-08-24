@@ -41,9 +41,9 @@ namespace AutoTest
 
         public static bool IsOSX {
             get {
-                if (_isUnix == null)
+                if (_isOSX == null)
                     setUnixAndLinux();
-                return (bool) _isUnix;
+                return (bool) _isOSX;
             }
         }
 
