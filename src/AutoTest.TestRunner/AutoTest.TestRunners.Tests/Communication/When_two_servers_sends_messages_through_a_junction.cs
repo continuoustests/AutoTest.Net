@@ -27,7 +27,7 @@ namespace AutoTest.TestRunners.Tests.Communication
                         junction.Combine(pipe1);
                         junction.Combine(pipe2);
                         server1.Send("Message from server 1");
-                        server1.Send("Message from server 2");
+                        server2.Send("Message from server 2");
 
                         var messages = new List<string>();
                         var client = new PipeClient();

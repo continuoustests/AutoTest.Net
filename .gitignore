@@ -30,3 +30,5 @@ AutoTest.config.old
 *_mm_cache.bin
 *~
 *.swp
+
+/AutoTest.NET.sln.DotSettings.user
