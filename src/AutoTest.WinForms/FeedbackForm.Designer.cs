@@ -1,4 +1,5 @@
-﻿namespace AutoTest.WinForms
+﻿using System.Windows.Forms;
+namespace AutoTest.WinForms
 {
     partial class FeedbackForm
     {
@@ -28,6 +29,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            var keepOnTop = new ToolStripMenuItem("keep on top")
+            {
+                CheckOnClick = true
+            };
+            keepOnTop.Click += (sender, eventArgs) => this.TopMost = ((ToolStripMenuItem)sender).Checked;
+
+            var minimal = new ToolStripMenuItem("hide title bar")
+            {
+                CheckOnClick = true
+            };
+            minimal.Click += (sender, eventArgs) =>
+            {
+                var isChecked = ((ToolStripMenuItem)sender).Checked;
+
+                this.ControlBox = !isChecked;
+                this.ShowIcon = !isChecked;
+                this.FormBorderStyle = !isChecked ? FormBorderStyle.FixedSingle : FormBorderStyle.Sizable;
+                this.Text = !isChecked ? "AutoTest.Net" : string.Empty;
+            };
+
+            this.ContextMenuStrip = new ContextMenuStrip();
+            this.ContextMenuStrip.Items.Add(keepOnTop);
+            this.ContextMenuStrip.Items.Add(minimal);
+
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeedbackForm));
             this.runFeedback = new AutoTest.UI.RunFeedback();
             this.SuspendLayout();
