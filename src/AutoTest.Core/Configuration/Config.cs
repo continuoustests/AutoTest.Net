@@ -330,18 +330,18 @@ namespace AutoTest.Core.Configuration
 
         public void ValidateSettings()
         {
-            /*if (noneExists(_buildExecutables))
+            if (noneExists(_buildExecutables))
                 _bus.Publish(new WarningMessage("Invalid build executable specified in the configuration file. Builds will not be run."));
             if (noneExists(_nunitTestRunners))
                 _bus.Publish(new WarningMessage("NUnit test runner not specified. NUnit tests will not be run."));
             if (noneExists(_msTestRunner))
                 _bus.Publish(new WarningMessage("MSTest test runner not specified. MSTest tests will not be run."));
 			if (noneExists(_xunitTestRunner))
-                _bus.Publish(new WarningMessage("XUnit test runner not specified. XUnit tests will not be run."));*/
-            //if (noneExists(_mspecTestRunner))
-            //    _bus.Publish(new WarningMessage("Machine.Specifications test runner not specified. Machine.Specifications tests will not be run."));
-            /*if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
-                _bus.Publish(new WarningMessage("Code editor not specified"));*/
+                _bus.Publish(new WarningMessage("XUnit test runner not specified. XUnit tests will not be run."));
+            if (noneExists(_mspecTestRunner))
+                _bus.Publish(new WarningMessage("Machine.Specifications test runner not specified. Machine.Specifications tests will not be run."));
+            if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
+                _bus.Publish(new WarningMessage("Code editor not specified"));
             _bus.Publish(new InformationMessage(string.Format("MbUnit tests: The MbUnit runner needs a reference to your gallio bin directory to be able to run tests. Edit TestRunners{0}MbUnit{0}mbunit.config to point to the correct path.", Path.DirectorySeparatorChar)));
             _bus.Publish(new InformationMessage(getIgnoreList()));
         }

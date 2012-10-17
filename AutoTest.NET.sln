@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSTest", "MSTest", "{759586
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0AB4F96C-8D25-4743-80ED-0F0AACA07E94}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CEAF138A-FD09-4002-90DF-48A227A41BF2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XUnit", "XUnit", "{AC6F930F-CE1D-4419-A49F-4CA7AE7B74CE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A0FE44DE-102D-4ACA-A72F-4BE1CF5EE868}"
@@ -88,6 +86,30 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.VisualStudio.QualityTools.UnitTestFramework", "src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\Microsoft.VisualStudio.QualityTools.UnitTestFramework.csproj", "{712F063F-2F83-4E42-89A7-1EA114F539A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MSpec.Tests.TestResource", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MSpec.Tests.TestResource\AutoTest.TestRunners.MSpec.Tests.TestResource.csproj", "{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8E8EE371-32AB-4938-B6F6-1AC364A069C6}"
+	ProjectSection(SolutionItems) = preProject
+		Installer\ATInstaller.iss = Installer\ATInstaller.iss
+		build.bat = build.bat
+		build.sh = build.sh
+		buildAddin.bat = buildAddin.bat
+		deploy.bat = deploy.bat
+		deploy.sh = deploy.sh
+		deployAddin.bat = deployAddin.bat
+		LICENSE = LICENSE
+		NDepend.xml = NDepend.xml
+		open.bat = open.bat
+		open.sh = open.sh
+		package.bat = package.bat
+		package.sh = package.sh
+		README = README
+		SolutionVersion.cs = SolutionVersion.cs
+		test.bat = test.bat
+		test.sh = test.sh
+		TODOs = TODOs
+		zip.bat = zip.bat
+		zip.sh = zip.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

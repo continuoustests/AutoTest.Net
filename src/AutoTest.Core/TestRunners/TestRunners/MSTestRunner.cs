@@ -29,8 +29,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public bool CanHandleTestFor(string assembly)
 		{
             var framework = _assemblyReader.GetTargetFramework(assembly);
-            if (!_fsService.FileExists(_configuration.MSTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+
+            string runner = _configuration.MSTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor));
+
+            if (!_fsService.FileExists(runner))
+            {
+                DebugLog.Debug.WriteInfo(string.Format("File not found: {0}", runner));
+
                 return false;
+            }
 
             return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("Microsoft.VisualStudio.QualityTools.UnitTestFramework")) > 0;
 		}

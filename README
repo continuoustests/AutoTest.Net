@@ -1,75 +1,173 @@
-(View in WordPad or similar on windows since the file uses Unix line endings)
+AutoTest.NET is a cross-platform continuous testing Visual Studio Add-in, console
+application, and desktop application for the .NET and Mono frameworks.
 
-AutoTest.Net (http://groups.google.com/group/autotestnet)
-This product provides continuous testing for the .Net platform. It contains a 
-Visual Studio Addin through a windows installer (AutoTest-v*.*.*.exe),
-winforms app and a console app.
-The Visual Studio Addin will by default start as paused so after opening a
-solution click AutoTest.Net->Resume Engine. To have it always run afeter
-opening a solution set the StartPaused setting to false and restart the engine.
+It improves test-driven development (TDD) by automatically compiling code and running tests
+in the background.  It can be configured to determine exactly which tests are affected from
+the code changes since the last build and only run those tests to provide real-time
+feedback faster than running all the tests in the project.  Automatically generated graphs
+help visualize the relations between methods and the tests that call them.  Annotations
+alongside the code help to immediately see the level of risk when changing pieces of code.
 
-Features
-	* Watch directory or solution file
-	* File tracking: Automatic builds and testruns
-	* Assembly tracking: Automatic test runs for built assemblies (if 
-	  BuildExecutable is removed from config)
-		* You can then build through Visual Studio or something similar while
-		  still having your tests run automatically
-	* Cross platform support through Mono
-	* Supports C# and Visual Basic and F# projects
-	* Supported build tools
-		* MSBuild.exe
-		* Mono's xbuild
-	* Supported test runners
-		* AutoTest.TestRunner (Built in runner) supporting:
-			* NUnit
-			* XUnit
-			* MSTest
-			* MSpec
-			* MbUnit
-		* Native Console runner for NUnit
-		* Native Console runner for XUnit
-		* Native Console runner for MSpec
-		* Native Console runner for MSTest
-	* Supports notifications through
-		* notify-send (Linux)
-		* Snarl through it's tcp interface (Windows)
-		* Growl (Mac, Windows)
-	* Supports configurable ignore files using the .gitignore format
-		* The attribute override="merge" will merge with original
-		* The attribute override="exclude" will remove it all together
+Supported Visual Studio versions:
+  2008
+  2010
+  2012
 
-Geting started
-To get started using this application edit AutoTest.config to suite your system.
-When done start either the winforms app or the console app. In the winforms 
-application the little button in the top rightcorner will display some nice to 
-know messages now and then. When set up just edita file within the watched folder 
-and save it. AutoTest.Net will detect any changes and start builds and run tests.
-If you end up in a scenario where it goes in to an endless loop it's probably
-detecting changes in a file generated either by build or testrun. If so use the
-ignore posibility in the configuration file. To figure out what files are being
-generated turn on logging and check the debug.log file.
+Supported build frameworks:
+  MSBuild
+  XBuild
 
-Build from source
-To build the whole thing from source just clone or fork the repository. If you want
-to build AutoTest.Net with Microsoft .Net instead fo mono go to the Settings folder.
-In there you will find the UppercuT.config and UppercuTx86.config files. Locate this
-line (<property name="microsoft.framework" value="mono-3.5" overwrite="false" />) in
-both files and switch from mono-3.5 to net-3.5.
+Supported projects:
+  C#
+  Visual Basic
+  F#
 
-When done go in and run build and deploy scripts (build.sh/build.bat and 
-deploy.sh/deploy.bat depending on whether you are on Windows(bat) or something else(sh)).
-After running build and deploy scripts you will find the built binaries under the 
-ReleaseBinaries folder.
+Supported test runners:
+  NUnit
+  XUnit
+  MSTest
+  MSpec
+  MbUnit
 
-Build Visual Studio Addin from source
-Go through the steps described in the previous section except for the actual build and
-deploy part. Now download Inno Setup and install it to the path specified in package.bat.
-After it's installed run package.bat and find the installer in ReleaseBinaries\Installer.
+Supported notification systems:
+  notify-send (Linux)
+  Snarl through it's tcp interface (Windows)
+  Growl (Mac, Windows)
 
-PS!! For building on mono you need 2.8 or later and it uses Git's core.autocrlf=true
+File system watchers:
+  Solution file
+  Directory
+  Files \ Assemblies
 
 
-Special thanks:
+Getting started
+
+Download the windows installer or binaries from http://continuoustests.com or clone or fork
+and build from the source code repository https://github.com/continuoustests/AutoTest.Net.
+
+The Windows installer will install the Visual Studio Add-in, console application, and
+desktop application.  Once installed, a dialog will be displayed the next time a solution
+file is opened to allow configuring the settings for the solution.  Refer to the
+ContinuousTests menu item in Visual Studio to change configuration settings, perform
+actions, display output windows, and get additional help.
+
+AutoTest.NET can be configured to detect changes to files in the project once they are
+saved and automatically start to build the code and run the affected tests.  It can also be
+configured to start running tests only when assemblies are built.  Changes from specific
+files and paths can be ignored to avoid an infinite loop for example.
+
+NUnit and XUnit are configured out of the box with AutoTest.NET’s internal runner.
+
+See the instructional videos on http://continuoustests.com for working with ContinuousTests
+inside Visual Studio.
+
+The console and desktop applications can be used to run continuous tests outside of Visual 
+Studio.
+
+A watch directory must be specified which is the root directory from where AutoTest.NET
+recursively watches for file/assembly changes.
+
+The watch directory path can be passed as the first command line parameter to
+AutoTest.Console.exe and AutoTest.WinForms.exe.
+
+
+Configuration Files
+
+There are two types of configuration files, global and project.  Project configuration
+settings will be merged with the global configuration.
+
+The global configuration file can be found here:
+%LOCALAPPDATA%\MightyMoose\AutoTest.config
+
+Solution configuration files are specific to each solution file and can be found here:
+%LOCALAPPDATA%\MightyMoose\storage\Configuration\%SolutionName%_%hash%\AutoTest.config
+
+An AutoTest.config can be placed in the root of the watch directory when using the console
+or desktop application.
+
+
+AutoTest.config template:
+
+https://github.com/continuoustests/AutoTest.Net/blob/master/src/AutoTest.Core/AutoTest.config.template
+
+A project specific configuration file can look something like this:
+
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <!-- Exclude all build executable configuration all together -->
+  <BuildExecutable override="exclude"></BuildExecutable>
+
+  <!-- Merge these changes in with what's already in the base configuration -->
+  <!-- The override attribute will be read for the first occurrence in the setting family --> 
+  <NUnitTestRunner framework="v3.5" override="merge">NewTestRunner for v3.5</NUnitTestRunner>
+  <NUnitTestRunner framework="v4.0">NewTestRunner for v4.0</NUnitTestRunner>
+
+  <!-- This will just override whatever XUnit config is in the base configuration -->
+  <XUnitTestRunner>C:\XUnit\xunit.console.exe</XUnitTestRunner>
+
+  <!-- merges in some extra assemblies to ignore -->
+  <ShouldIgnoreTestAssembly override="merge">
+    <Assembly>*System.dll</Assembly>
+  </ShouldIgnoreTestAssembly>
+</configuration>
+
+
+Notifications
+
+On non-Windows operating systems notify-send can be installed by running: sudo apt-get
+install notify-osd.  The Growl application can be configured with the growlnotify
+configuration setting.  AutoTest.NET can automatically send notifications when test runs
+have started and finished.
+
+
+Ignore File Configuration
+
+The IgnoreFile option can be set to an absolute path or a path relative to the watch
+directory of the file where paths AutoTest.NET should ignore when detecting changes are
+configured.  This file uses .gitignore syntax and existing .gitignore files are compatible
+with AutoTest.NET.
+
+An example ignore file:
+
+# Making sure the file IgnoreThisOne.xml is ignored
+IgnoreThisOne.xml
+
+# Should ignore any file or directory called TestResults
+TestResults
+
+# Should ignore all output xmls
+*output.xml
+
+
+Building from source
+
+1. Clone or fork the repository.
+2. Run package.bat (Windows) or package.sh (non-Windows)
+
+The built binaries will be located under the ReleaseBinaries folder.
+On Windows, the windows installer will be located in the Installer subfolder.
+
+
+Wiki:
+
+https://github.com/continuoustests/AutoTest.Net/wiki
+
+
+Keyboard Shortcuts CheatSheet:
+
+http://continuoustests.com/cheatsheet.html
+
+
+Discussion Group:
+
+http://groups.google.com/group/autotestnet
+
+
+Special Thanks:
+
 Thanks to Philip Laureano for letting us embed the Linfu Dynamic Proxy source into the
 MSpec runner enabling us to support all MSpec versions out of the box.
+
+AutoTest.NET is based off of autotest which is a popular Ruby tool for running unit tests
+as soon as your save your files. This project was originally started by James Avery at
+http://code.google.com/p/autotestnet/
