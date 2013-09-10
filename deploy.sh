@@ -1,6 +1,7 @@
 #!/bin/bash
 # stty -echo
 
+DIR=$(pwd)
 BINARYDIR="./build_outputAnyCPU/AutoTest.NET"
 BINARYDIRx86="./build_outputx86/AutoTest.TestRunner"
 DEPLOYDIR="./ReleaseBinaries"
