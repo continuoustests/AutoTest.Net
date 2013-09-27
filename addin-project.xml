@@ -1,6 +1,6 @@
 <AddinProject appVersion="4.0">
 	<Project platforms="Linux">
-		<AddinFile>AutoTest.MDAddin/bin/Release/AutoTest.MDAddin.dll</AddinFile>
+		<AddinFile>addins/MonoDevelop/AutoTest.MDAddin/bin/Release/AutoTest.MDAddin.dll</AddinFile>
 		<BuildFile>AutoTest.MDAddin.sln</BuildFile>
 		<BuildConfiguration>Release</BuildConfiguration>
 	</Project>
