@@ -34,7 +34,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             if (!_fsService.FileExists(runner))
             {
-                DebugLog.Debug.WriteInfo(string.Format("File not found: {0}", runner));
+				if (!string.IsNullOrEmpty(runner))
+					DebugLog.Debug.WriteInfo(string.Format("MSTestRunner: File not found: {0} for framework {1}", runner, framework));
 
                 return false;
             }

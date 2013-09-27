@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
   <!-- You have the possibility to specify multiple build executables based on framework version or -->
@@ -6,36 +6,34 @@
   <!-- If you remove all configured build executables AutoTest.NET will start tracking assembly changes -->
   <!-- instead and you can use Visual Studio or equal to build and AutoTest.NET will -->
   <!-- run all tests for any built assembly. -->
-  <BuildExecutable parameters="">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
+  <BuildExecutable parameters="">/usr/local/bin/xbuild</BuildExecutable>
   
   <!-- If set it will always use msbuild to build solution file instead of only changed projects -->
   <!-- when AutoTest.NET is set to watch a solution file -->
-  <WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
+  <WhenWatchingSolutionBuildSolution>false</WhenWatchingSolutionBuildSolution>
   
   <!-- Machine.Specifications test runner. (Optional) -->
-  <MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>
+  <!--<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>-->
   
   <!-- Makes the file change watcher start in paused state -->
   <!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
-  <!-- <StartPaused>true</StartPaused> -->
+  <StartPaused>false</StartPaused>
   
   <!-- Code editor configuration. You can specify a code editor to open files in. (Optional) -->
   <!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
   <!-- the line to goto. These will be filled in by the application when executing -->
   <!-- the statement -->
-  <CodeEditor>
+  <!--<CodeEditor>
   <Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
   <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
   </CodeEditor>
+  -->
   
   <!-- When set this will enable logging to the debug.log file in the root directory -->
   <Debugging>false</Debugging>
   
   <!-- Additional parameters to msbuild command line (Optional) -->
   <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
-  
-  <!-- Determines how many projects msbuild will run in parallel (Optional) -->
-  <!-- <MSBuildParallelBuildCount>2</MSBuildParallelBuildCount> -->
   
   <!-- To change the default recycle size of the logs (1024000 = 1M) Set the number of bytes you -->
   <!-- want the logs to roll at here -->
@@ -52,24 +50,19 @@
   <!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
   
   <!-- Whether to use AutoTest.NET's own test runner (Optional)-->
-  <!--<UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
+  <UseAutoTestTestRunner>false</UseAutoTestTestRunner>
   
   <!-- Testing test assemblies in parallel-->
   <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
   
   <!-- NUnit test runner. Specifies the path to the nunit console test runner (Optional) -->
   <!-- Default NUnit runner is AutoTest.TestRunner. This is an optional console runner -->
-  <!-- Use <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
+  <!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
   <!-- You have the possibility to specify multiple build executables based on framework version -->
   <!-- from within the csproj/vbproj file using the framework attribute. -->
   <!-- (framework only, not framework and product version like with the build exe) -->
-  <!--<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>-->
-
-  <!-- Environment variables for NUnit test runner (Optional). Can appear multiple times. -->
-  <!-- These environment variables will be set before the NUnit test runner will be started. -->
-  <!-- This is useful e.g. on Linux to run tests on a different display. -->
-  <!-- <NUnitEnvironment name="DISPLAY" value=":2"/> -->
-
+  <NUnitTestRunner>/usr/local/lib/mono/4.0/nunit-console.exe</NUnitTestRunner>
+  
   <!-- XUnit test runner. (Optional) -->
   <!-- Default XUnit runner is AutoTest.TestRunner. This is an optional console runner -->
   <!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
@@ -79,7 +72,7 @@
   <!-- MSTest test runner. (Optional) -->
   <!-- Has support for the framework attribute like NUnit test runner config -->
   <!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
- 
+  
   <!-- Wildcard expressions for excluding test assemblies (Optional)-->
   <!--<ShouldIgnoreProject>-->
   <!--  <Project>*MyIgnoredProject.csproj</Project>-->
@@ -87,9 +80,9 @@
 
   <!-- Wildcard expressions for excluding test assemblies (Optional)-->
   <!--<ShouldIgnoreTestAssembly>-->
-  <!--  <Assembly>*whatever.dll</Assembly>-->
+  <!--	<Assembly>*whatever.dll</Assembly>-->
   <!--</ShouldIgnoreTestAssembly>-->
-
+  
   <!-- Test categories to ignore. Only supported by NUnit (Optional) -->
   <!--<ShouldIgnoreTestCategories>-->
   <!--	<Category>MyIgnoreCategory</Category>-->

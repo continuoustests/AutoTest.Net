@@ -1,0 +1,87 @@
+<Addin namespace   = "AutoTest.MDAddin"
+       id          = "MightyMoose"
+       name        = "AutoTest.NET MonoDevelop Addin"
+       author      = "Eberhard Beilharz"
+       copyright   = "MIT/X11"
+       url         = "http://www.continuoustests.com"
+       description = "Integrates AutoTest.NET into MonoDevelop"
+       category    = "Testing"
+       version     = "1.0">
+
+	<Dependencies>
+		<Addin id="::MonoDevelop.Ide" version="4.0"/>
+		<Addin id="::MonoDevelop.NUnit" version="4.0"/>
+	</Dependencies>
+
+	<!-- Extension points -->
+	<ExtensionPoint path="/AutoTest/MDAddin/ContextMenu/ContinuousTestsPad">
+		<ExtensionNode id="MonoDevelop.Components.Commands.ExtensionNodes.CommandItem"/>
+	</ExtensionPoint>
+
+	<!-- Extensions -->
+	<Extension path = "/MonoDevelop/Ide/StartupHandlers">
+		<Class class="AutoTest.MDAddin.Startup"/>
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/Commands/Tools">
+		<Command id="AutoTest.MDAddin.Commands.ResumeEngine"
+			_label="Resume Engine"
+			_description="Resume the continuous tests engine"
+			defaultHandler="AutoTest.MDAddin.Commands.ResumeEngine" />
+		<Command id="AutoTest.MDAddin.Commands.PauseEngine"
+			_label="Pause Engine"
+			_description="Pause the continuous tests engine"
+			defaultHandler="AutoTest.MDAddin.Commands.PauseEngine" />
+		<Command id="AutoTest.MDAddin.Commands.GlobalConfiguration"
+			_label="Global Configuration"
+			_description="Opens the global config file"
+			defaultHandler="AutoTest.MDAddin.Commands.GlobalConfiguration" />
+		<Command id="AutoTest.MDAddin.Commands.LocalConfiguration"
+			_label="Local Configuration"
+			_description="Opens the local config file in the solution directory"
+			defaultHandler="AutoTest.MDAddin.Commands.LocalConfiguration" />
+		<Command id="AutoTest.MDAddin.Commands.About"
+			_label="About"
+			_description="Displays the about dialog"
+			defaultHandler="AutoTest.MDAddin.Commands.About" />
+		<Command id="AutoTest.MDAddin.Commands.TestCommands.RunTest"
+			_label="Run Selected Test"
+			defaultHandler="AutoTest.MDAddin.Commands.RunTest"/>
+		<Command id="AutoTest.MDAddin.Commands.TestCommands.DebugTest"
+			_label="Debug Selected Test"
+			defaultHandler="AutoTest.MDAddin.Commands.DebugTest" />
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/MainMenu">
+		<ItemSet id="AutoTest.MDAddin.ContinuousTests"
+			_label="ContinuousTests"
+			insertafter="Tools">
+			<CommandItem id="AutoTest.MDAddin.Commands.ResumeEngine" />
+			<CommandItem id="AutoTest.MDAddin.Commands.PauseEngine" />
+			<SeparatorItem id="Separator1" />
+			<CommandItem id="AutoTest.MDAddin.Commands.TestCommands.RunTest" />
+			<CommandItem id="AutoTest.MDAddin.Commands.TestCommands.DebugTest" />
+			<SeparatorItem id="Separator1" />
+			<CommandItem id="AutoTest.MDAddin.Commands.GlobalConfiguration" />
+			<CommandItem id="AutoTest.MDAddin.Commands.LocalConfiguration" />
+			<SeparatorItem id="Separator1" />
+			<CommandItem id="AutoTest.MDAddin.Commands.About" />
+		</ItemSet>
+	</Extension>
+
+	<Extension path = "/AutoTest/MDAddin/ContextMenu/ContinuousTestsPad">
+		<CommandItem id="AutoTest.MDAddin.Commands.TestCommands.RunTest" />
+		<CommandItem id="AutoTest.MDAddin.Commands.TestCommands.DebugTest" />
+	</Extension>
+
+	<Extension path = "/MonoDevelop/Ide/Pads">
+		<Pad id="AutoTest.MDAddin.ContinuousTestsPad"
+			_label="Continuous Tests"
+			icon="nunit-pad-icon"
+			class="AutoTest.MDAddin.ContinuousTestsPad"
+			defaultPlacement = "Bottom" 
+			defaultLayout="UnitTesting"
+			defaultStatus="AutoHide"/>
+	</Extension>
+
+</Addin>

@@ -25,7 +25,8 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> StartPaused { get; private set; }
         public ConfigItem<string[]> WatchDirectories { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> BuildExecutables { get; private set; }
-        public ConfigItem<KeyValuePair<string, string>[]> NUnitTestRunner { get; private set; }
+		public ConfigItem<KeyValuePair<string, string>[]> NUnitTestRunner { get; private set; }
+        public ConfigItem<List<KeyValuePair<string, string>>> NUnitEnvironment { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> MSTestRunner { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> XUnitTestRunner { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> MSpecTestRunner { get; private set; }
@@ -59,6 +60,7 @@ namespace AutoTest.Core.Configuration
 			WatchDirectories = new ConfigItem<string[]>(new string[] {});
             BuildExecutables = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             NUnitTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
+			NUnitEnvironment = new ConfigItem<List<KeyValuePair<string, string>>>(new List<KeyValuePair<string, string>>());
             MSTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             XUnitTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             MSpecTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
@@ -94,6 +96,7 @@ namespace AutoTest.Core.Configuration
 			WatchDirectories = getValues("configuration/DirectoryToWatch", false);
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
+			NUnitEnvironment = getKeyValueSetting("configuration/NUnitEnvironment");
             MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
             XUnitTestRunner = getVersionedSetting("configuration/XUnitTestRunner");
             MSpecTestRunner = getVersionedSetting("configuration/MachineSpecificationsTestRunner");
@@ -133,7 +136,33 @@ namespace AutoTest.Core.Configuration
 				return false;
 			}
 		}
-		
+
+		private ConfigItem<List<KeyValuePair<string, string>>> getKeyValueSetting(string xpath)
+		{
+			var item = new ConfigItem<List<KeyValuePair<string, string>>>(new List<KeyValuePair<string, string>>());
+			var nodes = _xml.SelectNodes(xpath);
+			if (nodes.Count == 0)
+				return item;
+
+			var list = new List<KeyValuePair<string, string>>();
+			foreach (XmlNode node in nodes)
+			{
+				string name = string.Empty;
+				string value = string.Empty;
+				var nameAttr = node.SelectSingleNode("@name");
+				var valueAttr = node.SelectSingleNode("@value");
+				if (nameAttr != null)
+					name = nameAttr.Value;
+				if (valueAttr != null)
+					value = valueAttr.Value;
+				if (!string.IsNullOrEmpty(name))
+					list.Add(new KeyValuePair<string, string>(name, value));
+			}
+			if (list.Count > 0)
+				item.SetValue(list);
+			return item;
+		}
+
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
         {
 			var item = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string,string>[] {});

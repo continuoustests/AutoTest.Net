@@ -17,10 +17,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 {
     public class NUnitTestRunner : ITestRunner
     {
-        private IMessageBus _bus;
-        private IConfiguration _configuration;
+		private IMessageBus _bus;
+		private IConfiguration _configuration;
 		private IAssemblyPropertyReader _assemblyReader;
-        private IFileSystemService _fsService;
+		private IFileSystemService _fsService;
+		private string _tempFile;
 
         public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyPropertyReader assemblyReader, IFileSystemService fsService)
         {
@@ -29,6 +30,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			_assemblyReader = assemblyReader;
             _fsService = fsService;
         }
+
+		public NUnitTestRunner(NUnitTestRunner other)
+		{
+			_bus = other._bus;
+			_configuration = other._configuration;
+			_assemblyReader = other._assemblyReader;
+			_fsService = other._fsService;
+			_tempFile = other._tempFile;
+		}
 
         #region ITestRunner Members
 
@@ -54,24 +64,36 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 if (assemblies == null)
                     continue;
 				var arguments = getExecutableArguments(nUnitExe, assemblies, tests, runInfos);
-                DebugLog.Debug.WriteInfo("Running tests: {0} {1}", nUnitExe.Exe, arguments); 
-	            var proc = new Process();
-	            proc.StartInfo = new ProcessStartInfo(nUnitExe.Exe, arguments);
-	            proc.StartInfo.RedirectStandardOutput = true;
-	            //proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(runInfo.Assembly);
-	            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-	            proc.StartInfo.UseShellExecute = false;
-	            proc.StartInfo.CreateNoWindow = true;
-	
-	            proc.Start();
-	            var parser = new NUnitTestResponseParser(_bus, TestRunner.NUnit);
-                var nUnitResult = getNUnitOutput(proc.StandardOutput);
-			    parser.Parse(nUnitResult, runInfos, containsTests(arguments));
-				foreach (var result in parser.Result)
-		            results.Add(result);
+                DebugLog.Debug.WriteInfo("Running tests: {0} {1}", nUnitExe.Exe, arguments);
+				var startInfo = new ProcessStartInfo(nUnitExe.Exe, arguments);
+	            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+	            startInfo.UseShellExecute = false;
+	            startInfo.CreateNoWindow = true;
+				if (_configuration.NUnitEnvironment.Count > 0)
+				{
+					foreach (var item in _configuration.NUnitEnvironment)
+						startInfo.EnvironmentVariables[item.Key] = item.Value;
+				}
+
+				StartProcess(startInfo);
+				var parser = new NUnitTestResponseParser(_bus, TestRunner.NUnit);
+				using (var reader = new StreamReader(_tempFile))
+				{
+					var nUnitResult = getNUnitOutput(reader);
+					parser.Parse(nUnitResult, runInfos, containsTests(arguments));
+					foreach (var result in parser.Result)
+						results.Add(result);
+				}
+				File.Delete(_tempFile);
 			}
 			return results.ToArray();
         }
+
+		protected virtual void StartProcess(ProcessStartInfo startInfo)
+		{
+			var proc = Process.Start(startInfo);
+			proc.WaitForExit();
+		}
 
         private bool containsTests(string arguments)
         {
@@ -135,18 +157,22 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		{
 			var calc = new MaxCmdLengthCalculator();
 			var separator = getArgumentSeparator();
-			string framework = "";
+			_tempFile = Path.GetTempFileName();
+			var arguments = new StringBuilder();
+			var categoryList = getCategoryIgnoreList();
+			arguments.AppendFormat("{0}noshadow {0}xml=\"{1}\" {2} {3}", separator, _tempFile, categoryList, assemblyName);
+			if (arguments.Length + tests.Length + 1 + exe.Exe.Length <= calc.GetLength())
+				arguments.Append(" " + tests);
 			// only use framework for windows as the default runner on linux has no framework parameter
 			if (OS.IsWindows)
 			{
 				if (exe.Version.Length > 0)
-					framework = string.Format(" {0}framework:{1}", separator, exe.Version);
+				{
+					var framework = string.Format(" {0}framework:{1} ", separator, exe.Version);
+					arguments.Insert(0, framework);
+				}
 			}
-			var categoryList = getCategoryIgnoreList();
-			var arguments = string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName + " " + tests;
-			if ((arguments.Length + exe.Exe.Length) > calc.GetLength())
-				arguments = string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName;
-			return arguments;
+			return arguments.ToString();
 		}
 
         #endregion
