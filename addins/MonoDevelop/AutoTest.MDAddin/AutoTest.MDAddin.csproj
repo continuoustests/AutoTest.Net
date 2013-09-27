@@ -77,9 +77,6 @@
     <Reference Include="FSWatcher">
       <HintPath>..\..\..\lib\FSWatcher\FSWatcher.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\lib\Cecil\Mono.Cecil.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
       <Private>False</Private>
       <Package>monodevelop</Package>
@@ -90,6 +87,10 @@
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

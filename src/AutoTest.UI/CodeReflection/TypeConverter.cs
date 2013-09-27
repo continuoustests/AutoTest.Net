@@ -63,8 +63,8 @@ namespace AutoTest.UI.CodeReflection
 
         public void Dispose()
         {
-            if (_assembly != null)
-                _assembly.Dispose();
+//            if (_assembly != null)
+//                _assembly.Dispose();
         }
     }
 }
