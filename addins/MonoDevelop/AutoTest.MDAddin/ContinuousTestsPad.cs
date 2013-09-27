@@ -474,14 +474,20 @@ namespace AutoTest.MDAddin
 
 		internal void OnDebugTest()
 		{
+#if MD_41
 			var debugModeSet = Runtime.ProcessService.GetDebugExecutionMode();
 			var mode = debugModeSet.ExecutionModes.First();
 			RunSelectedTest(mode.ExecutionHandler);
+#endif
 		}
 
 		internal void OnUpdateDebugTest(CommandInfo info)
 		{
+#if MD_41
 			OnUpdateRunTest(info);
+#else
+			info.Enabled = false;
+#endif
 		}
 
 		#endregion
