@@ -1,5 +1,5 @@
 <Addin namespace   = "AutoTest.MDAddin"
-       id          = "MightyMoose"
+       id          = "AutoTestMDAddin"
        name        = "AutoTest.NET MonoDevelop Addin"
        author      = "Eberhard Beilharz"
        copyright   = "MIT/X11"
