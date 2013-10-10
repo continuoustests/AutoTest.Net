@@ -1,23 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
+  <!-- Solution specific configuration file. The settings defined in here override the settings -->
+  <!-- in the global AutoTest.config file. -->
+
   <!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
   <!-- You have the possibility to specify multiple build executables based on framework version or -->
   <!-- product version from within the csproj/vbproj file using the framework attribute. -->
   <!-- If you remove all configured build executables AutoTest.NET will start tracking assembly changes -->
   <!-- instead and you can use Visual Studio or equal to build and AutoTest.NET will -->
   <!-- run all tests for any built assembly. -->
-  <BuildExecutable parameters="">/usr/local/bin/xbuild</BuildExecutable>
+  <!-- <BuildExecutable parameters="">/usr/local/bin/xbuild</BuildExecutable>-->
   
   <!-- If set it will always use msbuild to build solution file instead of only changed projects -->
   <!-- when AutoTest.NET is set to watch a solution file -->
-  <WhenWatchingSolutionBuildSolution>false</WhenWatchingSolutionBuildSolution>
+  <!-- <WhenWatchingSolutionBuildSolution>false</WhenWatchingSolutionBuildSolution>-->
   
   <!-- Machine.Specifications test runner. (Optional) -->
   <!--<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>-->
   
   <!-- Makes the file change watcher start in paused state -->
   <!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
-  <StartPaused>false</StartPaused>
+  <!-- <StartPaused>false</StartPaused>-->
   
   <!-- Code editor configuration. You can specify a code editor to open files in. (Optional) -->
   <!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
@@ -30,7 +33,7 @@
   -->
   
   <!-- When set this will enable logging to the debug.log file in the root directory -->
-  <Debugging>false</Debugging>
+  <!-- <Debugging>false</Debugging>-->
   
   <!-- Additional parameters to msbuild command line (Optional) -->
   <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
@@ -50,7 +53,7 @@
   <!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
   
   <!-- Whether to use AutoTest.NET's own test runner (Optional)-->
-  <UseAutoTestTestRunner>false</UseAutoTestTestRunner>
+  <!-- <UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
   
   <!-- Testing test assemblies in parallel-->
   <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
@@ -61,7 +64,7 @@
   <!-- You have the possibility to specify multiple build executables based on framework version -->
   <!-- from within the csproj/vbproj file using the framework attribute. -->
   <!-- (framework only, not framework and product version like with the build exe) -->
-  <NUnitTestRunner>/usr/local/lib/mono/4.0/nunit-console.exe</NUnitTestRunner>
+  <!--<NUnitTestRunner>/usr/local/lib/mono/4.0/nunit-console.exe</NUnitTestRunner>-->
   
   <!-- XUnit test runner. (Optional) -->
   <!-- Default XUnit runner is AutoTest.TestRunner. This is an optional console runner -->

@@ -6,7 +6,7 @@
        url         = "http://www.continuoustests.com"
        description = "Integrates AutoTest.NET into MonoDevelop"
        category    = "Testing"
-       version     = "1.0">
+       version     = "1.0.1">
 
 	<Dependencies>
 		<Addin id="::MonoDevelop.Ide" version="4.0"/>

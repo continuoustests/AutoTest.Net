@@ -151,6 +151,9 @@
     <EmbeddedResource Include="Resources\circleOptimist.png">
       <LogicalName>AutoTest.MDAddin.Resources.circleOptimist.png</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="AutoTest.config.template.MD">
+      <LogicalName>AutoTest.config.template.MD</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
@@ -165,11 +168,6 @@
     <Folder Include="Listeners\" />
     <Folder Include="Resources\" />
     <Folder Include="Commands\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AutoTest.config.template.MD">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\AutoTest.Core\AutoTest.Core.csproj">

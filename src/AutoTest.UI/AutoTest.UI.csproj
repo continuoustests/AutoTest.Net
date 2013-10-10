@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Private>False</Private>
+      <Package>monodevelop</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
