@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using MonoDevelop.Components.Commands;
 using MonoDevelop.Ide;
+using System.Reflection;
 
 namespace AutoTest.MDAddin.Commands
 {
@@ -16,6 +17,12 @@ namespace AutoTest.MDAddin.Commands
 			var configFile = Path.Combine(atDir, "AutoTest.config");
 			if (File.Exists(configFile))
 				IdeApp.Workbench.OpenDocument(configFile);
+			else
+			{
+				var assembly = Assembly.GetExecutingAssembly();
+				var stream = assembly.GetManifestResourceStream("AutoTest.MDAddin.Resources.AutoTest.config.template.MD");
+				IdeApp.Workbench.NewDocument(configFile, "application/xml", stream);
+			}
 		}
 	}
 }
