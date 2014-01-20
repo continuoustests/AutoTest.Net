@@ -66,6 +66,9 @@ namespace AutoTest.UI
             textBoxContent.SelectionStart = 0;
             textBoxContent.SelectionLength = 0;
 
+            if (!isNix())
+                Height = (textBoxContent.Top * 2) + textBoxContent.Height;
+
             textBoxFocusHolder.Select();
             positionArrow();
         }
