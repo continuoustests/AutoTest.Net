@@ -15,6 +15,7 @@ namespace AutoTest.Core.Configuration
         void OverrideSolution(string solution);
         void ResetSolution();
 
+        string Providers { get; }
         bool StartPaused { get; }
         string[] WatchDirectores { get; }
         string BuildExecutable(ProjectDocument project);

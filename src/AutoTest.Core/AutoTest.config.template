@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
+  <!-- AutoTest providers support for now is .NET and php -->
+  <!-- Only one may be enabled at a time at this point -->
+  <!-- <Provider>.NET</Provider> -->
+
+
   <!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
   <!-- You have the possibility to specify multiple build executables based on framework version or -->
   <!-- product version from within the csproj/vbproj file using the framework attribute. -->
@@ -137,4 +142,34 @@
   <!-- Whether to adjust watch path to the lowest common path used by all projects -->
   <!-- included in a solution -->
   <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
+
+
+  <!-- PHP PROVIDER SETTINGS -->
+  <!-- Specific settings to the php provider -->
+  <!-- For the php provider to work the WatchAllFiles setting must be set to true. -->
+  <!-- As php is convention based you can set up multiple configs where the nameing convention -->
+  <!-- is php.phpunit.CONFIGNAME.SETTING.. -->
+
+  <!-- Settings for phpunit are convetion based. With the Pattern setting you specify strings -->
+  <!-- to match file change paths. Following patterns are TestPaths which are paths to test if -->
+  <!-- the pattern is matching. Consider the following example: -->
+  <!-- Pattern: "src/", TestPaths: "Tests/Unit,Tests/Db" -->
+  <!-- FILE: /home/you/src/MyProject/src/Commands/MyCommand.php -->
+  <!-- To be tested: -->
+  <!--    /home/you/src/MyProject/src/Tests/Unit -->
+  <!--    /home/you/src/MyProject/src/Tests/Db -->
+  
+  <!-- Comma separated list of available configurations. For each configuration a set of -->
+  <!-- matching phpunit config options must be specified -->
+  <!-- <php.phpunit.configs>default</php.phpunit.configs> -->
+
+  <!-- Config specific comma separated list of changed file matching patterns -->
+  <!-- <php.phpunit.default.Convention.Pattern>Bundle/,Framework/</php.phpunit.default.Convention.Pattern> -->
+
+  <!-- Config specific comma separated list of paths to relevant tests -->
+  <!-- <php.phpunit.default.Convention.TestPaths>Tests/Db,Tests/Unit</php.phpunit.default.Convention.TestPaths> -->
+
+  <!-- Config specific phpunit config file location (Optional) -->
+  <!-- <php.phpunit.default.configlocation>app</php.phpunit.default.configlocation> -->
+
 </configuration>

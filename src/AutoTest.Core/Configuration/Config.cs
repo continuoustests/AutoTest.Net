@@ -42,6 +42,7 @@ namespace AutoTest.Core.Configuration
             }
         }
 
+        public string Providers { get; private set; }
         public string MSBuildAdditionalParameters { get; private set; }
         public int MSBuildParallelBuildCount { get; private set; }
 		public string GrowlNotify { get; private set; }
@@ -155,6 +156,8 @@ namespace AutoTest.Core.Configuration
 		public void Merge(string configuratoinFile)
 		{
 			var core = getConfiguration(configuratoinFile);
+            if (core.Providers.WasReadFromConfig)
+                Providers = core.Providers.Value;
             if (core.StartPaused.WasReadFromConfig)
                 StartPaused = core.StartPaused.Value;
 			mergeVersionedItem(_buildExecutables, core.BuildExecutables);
@@ -216,6 +219,7 @@ namespace AutoTest.Core.Configuration
         {
             try
             {
+                Providers = core.Providers.Value;
                 StartPaused = core.StartPaused.Value;
                 _watchDirectories = core.WatchDirectories.Value;
                 _buildExecutables.AddRange(core.BuildExecutables.Value);

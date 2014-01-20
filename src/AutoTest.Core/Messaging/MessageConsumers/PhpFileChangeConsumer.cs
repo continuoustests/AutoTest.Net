@@ -13,7 +13,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	{
         private IConfiguration _config;
         private PhpRunHandler _handler;
-        private string _enabled = null;
 
         public bool IsRunning { get { return _handler.IsRunning; } }
 
@@ -24,10 +23,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
 		public void Consume(FileChangeMessage message)
         {
-            if (_enabled == null)
-                _enabled = _config.AllSettings("php.Enabled");    
-            if (_enabled != "true")
+            if (_config.Providers != "php")
                 return;
+            
         	var phpFiles 
         		= message.Files
         			.Where(x => x.Extension.ToLower() == ".php")

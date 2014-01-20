@@ -22,6 +22,7 @@ namespace AutoTest.Core.Configuration
     {
         private XmlDocument _xml = new XmlDocument();
 
+        public ConfigItem<string> Providers { get; private set; }
         public ConfigItem<bool> StartPaused { get; private set; }
         public ConfigItem<string[]> WatchDirectories { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> BuildExecutables { get; private set; }
@@ -55,6 +56,7 @@ namespace AutoTest.Core.Configuration
 
         public CoreSection()
         {
+            Providers = new ConfigItem<string>(".NET");
             StartPaused = new ConfigItem<bool>(false);
 			WatchDirectories = new ConfigItem<string[]>(new string[] {});
             BuildExecutables = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
@@ -90,6 +92,7 @@ namespace AutoTest.Core.Configuration
         {
             if (!tryLoadXml(configFile))
 				return;
+            Providers = getValueItem("configuration/Provider", ".NET");
             StartPaused = getBoolItem("configuration/StartPaused", false);
 			WatchDirectories = getValues("configuration/DirectoryToWatch", false);
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
