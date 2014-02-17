@@ -27,9 +27,11 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             var errors = new StringBuilder();
             var lastStatus = DateTime.Now;
             var proc = new Process();
+            var procArguments = "--log-junit \"" + file + "\" --tap " + arguments;
+            AutoTest.Core.DebugLog.Debug.WriteDebug("Running: phpunit " + procArguments);
             proc .Query(
                 "phpunit",
-                "--log-junit \"" + file + "\" --tap " + arguments,
+                procArguments,
                 false,
                 workingDirectory,
                 (error, line) => {
@@ -44,6 +46,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
                 });
             
             if (errors.Length != 0) {
+                AutoTest.Core.DebugLog.Debug.WriteDebug("Parse error is: " + errors);
                 results
                     .Add(
                         new TestRunResults(
@@ -57,7 +60,9 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             } else {
                 results.Add(removeParseErrorsForLocation(testLocation));
             }
+            AutoTest.Core.DebugLog.Debug.WriteDebug("Error length is " + errors.Length + " and file exists for file " + file + " is " + File.Exists(file).ToString());
             if (errors.Length == 0 && File.Exists(file)) {
+                AutoTest.Core.DebugLog.Debug.WriteDebug("Prasing output for " + file);
                 var testRunResults = JUnitXmlParser.Parse(File.ReadAllText(file), testLocation);
                 var finalResults = removeDeletedTests(testRunResults);
                 results.AddRange(finalResults);
