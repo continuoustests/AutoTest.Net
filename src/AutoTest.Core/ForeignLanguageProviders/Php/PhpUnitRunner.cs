@@ -29,7 +29,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             var proc = new Process();
             var procArguments = "--log-junit \"" + file + "\" --tap " + arguments;
             AutoTest.Core.DebugLog.Debug.WriteDebug("Running: phpunit " + procArguments);
-            proc .Query(
+            proc.Query(
                 "phpunit",
                 procArguments,
                 false,
@@ -37,6 +37,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
                 (error, line) => {
                     if (error) {
                         errors.AppendLine(line);
+                        proc.Kill();
                         return;
                     }
                     if (DateTime.Now.Subtract(lastStatus) > TimeSpan.FromMilliseconds(300)) {

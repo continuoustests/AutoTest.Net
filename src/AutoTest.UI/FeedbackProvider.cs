@@ -30,6 +30,7 @@ namespace AutoTest.UI
         private Action _clearList = () => {};
         private Action<string> _clearBuilds = (project) => {};
         private Func<bool> _isInFocus = () => false;
+        private Action<ImageStates, string> _imageStateChange = (state, message) => {};
         private Action<string,ImageStates,string> _updatePicture = (picture, state, information) => {};
         private Action<string,string,bool> _printMessage = (message,color,normal) => {};
         private Action _storeSelected = () => {};
@@ -108,6 +109,10 @@ namespace AutoTest.UI
         }
         public FeedbackProvider OnIsInFocus(Func<bool> isInFocus) {
             _isInFocus = isInFocus;
+            return this;
+        }
+        public FeedbackProvider OnImageStateChange(Action<ImageStates,string> imageStateChange) {
+            _imageStateChange = imageStateChange;
             return this;
         }
         public FeedbackProvider OnUpdatePicture(Action<string,ImageStates,string> updatePicture) {
@@ -314,6 +319,7 @@ namespace AutoTest.UI
 
         private void setProgress(ImageStates state, string information, bool external, string picture, bool force)
         {
+            _imageStateChange(state, information);
             if (!force && _progressUpdatedExternally && !external)
                 return;
             if (picture == null)

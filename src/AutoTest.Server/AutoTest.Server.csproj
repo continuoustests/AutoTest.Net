@@ -44,6 +44,19 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="..\..\lib\Nancy\Nancy.dll" />
+    <Reference Include="..\..\lib\Nancy\Nancy.Hosting.Self.dll" />
+    <Reference Include="..\..\lib\Alchemy\Alchemy.dll" />
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="..\..\lib\JSON.NET\Net40\Newtonsoft.Json.dll" />
+    <Reference Include="..\..\lib\websocket-sharp\websocket-sharp.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HiddenGetFocusForm.cs">
@@ -75,6 +88,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Communication\MessageEndpoint.cs" />
+    <Compile Include="BellyRub\Engine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -84,4 +99,18 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
+      <Project>{5352cb10-e898-4089-bff0-79d635fb44c9}</Project>
+      <Name>AutoTest.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
+      <Project>{1a05a6f1-2cc0-4a55-a54b-f2aa252f7b45}</Project>
+      <Name>AutoTest.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.UI\AutoTest.UI.csproj">
+      <Project>{3ffc895e-13fe-4c04-9613-bdcaf78bd6a2}</Project>
+      <Name>AutoTest.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
