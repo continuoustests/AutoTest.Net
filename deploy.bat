@@ -18,6 +18,7 @@ IF NOT EXIST "%DEPLOYDIR%" (
   mkdir "%DEPLOYDIR%\TestRunners\MSTest"
   mkdir "%DEPLOYDIR%\TestRunners\MSpec"
   mkdir "%DEPLOYDIR%\TestRunners\MbUnit"
+  mkdir "%DEPLOYDIR%\site"
 ) ELSE (
   IF NOT EXIST "%DEPLOYDIR%\Icons" (
 	mkdir "%DEPLOYDIR%\Icons"
@@ -74,6 +75,12 @@ copy "%BINARYDIR%\AutoTest.Console.exe" "%DEPLOYDIR%\AutoTest.Console.exe"
 copy "%BINARYDIR%\AutoTest.UI.dll" "%DEPLOYDIR%\AutoTest.UI.dll"
 copy "%BINARYDIR%\AutoTest.WinForms.exe" "%DEPLOYDIR%\AutoTest.WinForms.exe"
 copy "%BINARYDIR%\AutoTest.config.template" "%DEPLOYDIR%\AutoTest.config"
+copy "%BINARYDIR%\AutoTest.Server.exe" "%DEPLOYDIR%\AutoTest.Server.exe"
+copy "%BINARYDIR%\Nancy.dll" "%DEPLOYDIR%\Nancy.dll"
+copy "%BINARYDIR%\Nancy.Hosting.Self.dll" "%DEPLOYDIR%\Nancy.Hosting.Self.dll"
+copy "%BINARYDIR%\Newtonsoft.Json.dll" "%DEPLOYDIR%\Newtonsoft.Json.dll"
+copy "%BINARYDIR%\websocket-sharp.dll" "%DEPLOYDIR%\websocket-sharp.dll"
+xcopy /s "src\AutoTest.Server\site" "%DEPLOYDIR%\site"
 copy "%DIR%README" "%DEPLOYDIR%\README"
 copy "%DIR%LICENSE" "%DEPLOYDIR%\AutoTest.License.txt"
 

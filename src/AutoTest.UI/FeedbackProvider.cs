@@ -42,6 +42,7 @@ namespace AutoTest.UI
         private Func<Func<object,bool>,bool> _exists = (check) => false;
         private Func<object> _getSelectedItem = () => null;
         private Func<int> _getWidth = () => 0;
+        private Action _shutdown = () => {};
 
         private IListItemBehaviour _cancelRunItem;
         private IListItemBehaviour _debugTestItem;
@@ -159,6 +160,10 @@ namespace AutoTest.UI
             _getWidth = getWidth;
             return this;
         }
+        public FeedbackProvider OnShutdown(Action shutdown) {
+            _shutdown = shutdown;
+            return this;
+        }
 
         // Move stuff around on the form
         public void ReOrganize()
@@ -264,7 +269,8 @@ namespace AutoTest.UI
 			            else if (message.GetType() == typeof(BuildRunMessage)) {
 				            if (((BuildRunMessage)message).Results.Errors.Length == 0)
 					            ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
-                        }
+                        } else if (message.GetType() == typeof(ExternalCommandMessage))
+                            externalMessageReceived((ExternalCommandMessage)message);
                     }
                     catch
                     {
@@ -272,6 +278,26 @@ namespace AutoTest.UI
 
                 }
             }, msg);
+        }
+
+        private void externalMessageReceived(ExternalCommandMessage message)
+        {
+            var commandMessage = (ExternalCommandMessage)message;
+            if (commandMessage.Sender == "EditorEngine")
+            {
+                var msg = EditorEngineMessage.New(commandMessage.Sender + " " + commandMessage.Command);
+                if (msg.Arguments.Count == 1 &&
+                    msg.Arguments[0].ToLower() == "shutdown")
+                {
+                    _shutdown();
+                }
+                if (msg.Arguments.Count == 2 &&
+                    msg.Arguments[0].ToLower() == "autotest.net" &&
+                    msg.Arguments[1].ToLower() == "setfocus")
+                {
+                    _prepareForFocus();
+                }
+            }
         }
 
         private void handle(CacheMessages cacheMessages)

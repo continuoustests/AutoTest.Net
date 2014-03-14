@@ -5,13 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{95868EB3-9873-4017-A99E-7A6899BB6CD0}</ProjectGuid>
+    <ProjectGuid>{95868EB3-9873-4017-A99E-7A6899CC6CD0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoTest.Server</RootNamespace>
     <AssemblyName>AutoTest.Server</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -44,19 +42,24 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="..\..\lib\Nancy\Nancy.dll" />
-    <Reference Include="..\..\lib\Nancy\Nancy.Hosting.Self.dll" />
-    <Reference Include="..\..\lib\Alchemy\Alchemy.dll" />
-    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Castle.Core">
       <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Castle.Windsor">
       <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="..\..\lib\JSON.NET\Net40\Newtonsoft.Json.dll" />
-    <Reference Include="..\..\lib\websocket-sharp\websocket-sharp.dll" />
+    <Reference Include="Nancy">
+      <HintPath>..\..\lib\Nancy\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\..\lib\Nancy\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\JSON.NET\Net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>..\..\lib\websocket-sharp\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HiddenGetFocusForm.cs">
@@ -101,15 +104,15 @@
   -->
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
-      <Project>{5352cb10-e898-4089-bff0-79d635fb44c9}</Project>
+      <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
       <Name>AutoTest.Messages</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
-      <Project>{1a05a6f1-2cc0-4a55-a54b-f2aa252f7b45}</Project>
+      <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
       <Name>AutoTest.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutoTest.UI\AutoTest.UI.csproj">
-      <Project>{3ffc895e-13fe-4c04-9613-bdcaf78bd6a2}</Project>
+      <Project>{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}</Project>
       <Name>AutoTest.UI</Name>
     </ProjectReference>
   </ItemGroup>

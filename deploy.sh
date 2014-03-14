@@ -27,6 +27,7 @@ mkdir $DEPLOYDIR/TestRunners/XUnit
 mkdir $DEPLOYDIR/TestRunners/MSTest
 mkdir $DEPLOYDIR/TestRunners/MSpec
 mkdir $DEPLOYDIR/TestRunners/MbUnit
+mkdir $DEPLOYDIR/site
 
 cp $BINARYDIR/AutoTest.Messages.dll $DEPLOYDIR/AutoTest.Messages.dll
 cp $BINARYDIR/AutoTest.Core.dll $DEPLOYDIR/AutoTest.Core.dll
@@ -34,6 +35,12 @@ cp $BINARYDIR/AutoTest.Console.exe $DEPLOYDIR/AutoTest.Console.exe
 cp $BINARYDIR/AutoTest.UI.dll $DEPLOYDIR/AutoTest.UI.dll
 cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
+cp $BINARYDIR/AutoTest.Server.exe $DEPLOYDIR/AutoTest.Server.exe
+cp $BINARYDIR/Nancy.dll $DEPLOYDIR/Nancy.dll
+cp $BINARYDIR/Nancy.Hosting.Self.dll $DEPLOYDIR/Nancy.Hosting.Self.dll
+cp $BINARYDIR/Newtonsoft.Json.dll $DEPLOYDIR/Newtonsoft.Json.dll
+cp $BINARYDIR/websocket-sharp.dll $DEPLOYDIR/websocket-sharp.dll
+cp -r ./src/AutoTest.Server/site/* $DEPLOYDIR/site/
 sed -i "s/C:\\\Windows\\\Microsoft.NET\\\Framework\\\v4.0.30319\\\MSBuild.exe/\/usr\/bin\/xbuild/g" $DEPLOYDIR/AutoTest.config
 cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt

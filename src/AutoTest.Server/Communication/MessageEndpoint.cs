@@ -53,7 +53,23 @@ namespace AutoTest.Server.Communication
         {
             var messageHandlers = new Dictionary<string, Action<dynamic>>();
             messageHandlers.Add("build-test-all", (msg) => {
-                Console.WriteLine("Building and testing all");
+                var message = new ProjectChangeMessage();
+                var cache = AutoTest.Core.Configuration.BootStrapper.Services.Locate<AutoTest.Core.Caching.ICache>();
+                var configuration = AutoTest.Core.Configuration.BootStrapper.Services.Locate<AutoTest.Core.Configuration.IConfiguration>();
+                var bus = AutoTest.Core.Configuration.BootStrapper.Services.Locate<AutoTest.Core.Messaging.IMessageBus>();
+                var projects = cache.GetAll<AutoTest.Core.Caching.Projects.Project>();
+                foreach (var project in projects)
+                {
+                    if (project.Value == null)
+                        continue;
+                    project.Value.RebuildOnNextRun();
+                    message.AddFile(new ChangedFile(project.Key));
+                }
+                bus.Publish(message);
+            });
+            messageHandlers.Add("goto", (msg) => {
+                Console.WriteLine("Link clicked: " + msg.file.ToString());
+                _launcher.LaunchEditor(msg.file.ToString(), (int)msg.line, (int)msg.column);
             });
 
             _launcher = launcher;
@@ -83,6 +99,10 @@ namespace AutoTest.Server.Communication
                 (file,line,column) => {
                     _launcher.LaunchEditor(file, line, column);
                 })
+            .OnShutdown(() => {
+                    dynamic o = new ExpandoObject();
+                    send("shutdown", o);
+                })
             .OnGoToType(
                 (assembly,typename) => {
                     return false;
@@ -95,6 +115,7 @@ namespace AutoTest.Server.Communication
                 })
             .OnPrepareForFocus(
                 () => {
+                    System.Diagnostics.Process.Start("oi", "process set-to-foreground window \"AutoTest.Server\" \"AutoTest.Net - Connected\"");
                 })
             .OnClearList(
                 () => {

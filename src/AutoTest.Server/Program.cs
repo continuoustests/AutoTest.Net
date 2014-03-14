@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Collections.Generic;
-using System.Linq; using System.Threading;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Castle.MicroKernel.Registration;
 using AutoTest.Core.Configuration;
@@ -42,14 +44,19 @@ namespace AutoTest.Server
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             var exit = false;
             Console.CancelKeyPress += delegate {
                 exit = true;
             };
 
-            var watchdir = "/home/ack/src/OpenIDE";
+            var watchdir = Environment.CurrentDirectory;
+            if (args.Length > 0) {
+                if (Directory.Exists(args[0])) {
+                    watchdir = args[0];
+                }
+            }
             BootStrapper.Configure();
             Debug.EnableLogging(new ConsoleWriter());
             BootStrapper.Container
@@ -81,6 +88,7 @@ namespace AutoTest.Server
                 Console.WriteLine("shutting down");
                 BootStrapper.ShutDown();
                 Console.WriteLine("disposing server");
+                server.Stop();
             }
             Console.WriteLine("done");
         }
