@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Dynamic;
+using System.Collections;
 using System.Collections.Generic;
 using AutoTest.Messages;
 using AutoTest.Core.Caching;
@@ -32,6 +34,12 @@ namespace AutoTest.Server.Handlers
                     project.Value.RebuildOnNextRun();
                     message.AddFile(new ChangedFile(project.Key));
                 }
+                _bus.Publish(message);
+            });
+            handlers.Add("build-test-projects", (msg) => {
+                var message = new ProjectChangeMessage();
+                var projects = ((IEnumerable<object>)msg.projects).Select(x => x.ToString());
+                projects.ToList().ForEach(x => message.AddFile(new ChangedFile(x)));
                 _bus.Publish(message);
             });
 

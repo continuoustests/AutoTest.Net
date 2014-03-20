@@ -93,6 +93,10 @@ function buildAndTestAll() {
    send('build-test-all', {}); 
 }
 
+function buildAndTestProjects(projects) {
+    send('build-test-projects', { projects: projects });
+}
+
 function abortRun() {
     send('abort-run', {});
 }
