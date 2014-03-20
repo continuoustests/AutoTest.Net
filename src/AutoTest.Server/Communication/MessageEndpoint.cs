@@ -1,70 +1,49 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Linq;
-using System.Dynamic;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using BellyRub;
 using BellyRub.UI;
-using AutoTest.UI;
 using AutoTest.Messages;
 using AutoTest.Core.DebugLog;
-using AutoTest.Core.Launchers;
 using AutoTest.Core.Presenters;
-using AutoTest.Core.Configuration;
 using AutoTest.Server.Handlers;
 
 namespace AutoTest.Server.Communication
 {
-    class EmptyBehavior : IListItemBehaviour
-    {
-        public int Left { get; set; }
-        public int Width { get; set; }
-        public string Name { get { return "Name"; } }
-        public bool Visible { get; set; }
-    }
-
     class MessageEndpoint : IMessageForwarder, IDisposable
     {
         private string _tokenPath;
         private BellyEngine _engine;
         private Browser _browser;
         private IMessageProxy _proxy;
-        private IApplicatonLauncher _launcher;
 
         private List<IHandler> _handlers = new List<IHandler>();
         private List<IInternalMessageHandler> _internalHandlers = new List<IInternalMessageHandler>();
 
         public bool IsAlive { get { return _engine.HasConnectedClients; } }
 
-        public void Dispose()
-        {
+        public MessageEndpoint(string tokenPath, List<IHandler> handlers, IMessageProxy proxy) {
+            _tokenPath = tokenPath;
+            _handlers = handlers;
+            _proxy = proxy;
+            initializeEngine();
+            addHandlers();
+        }
+
+        public void Dispose() {
             Stop();
         }
 
-        public void Stop()
-        {
+        public void Stop() {
             if (_engine != null) {
                 _engine.Stop();
                 _engine = null;
             }
         }
-
-        public MessageEndpoint(string tokenPath, List<IHandler> handlers, IMessageProxy proxy)
-        {
-            _tokenPath = tokenPath;
-            _handlers = handlers;
-            _proxy = proxy;
-            initializeEngine();
-            _handlers.Add(new FocusHandler(_browser));
-            addHandlers();
-        }
-
-        public void Forward(object message)
-        {
+        
+        public void Forward(object message) {
             foreach (var handler in _internalHandlers)
                 handler.OnInternalMessage(message);
         }
@@ -84,6 +63,7 @@ namespace AutoTest.Server.Communication
         }
 
         private void addHandlers() {
+            _handlers.Add(new FocusHandler(_browser));
             foreach (var handler in _handlers) {
                 handler.DispatchThrough(send);
                 if (handler is IClientHandler) {

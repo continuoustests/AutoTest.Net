@@ -85,12 +85,26 @@ function keydown(e) {
     return true;
 }
 
-// function to send data on the web socket
+function openInEditor(file, line, column) {
+    send('goto', { file: file, line: line, column: column });
+}
+
+function buildAndTestAll() {
+   send('build-test-all', {}); 
+}
+
+function abortRun() {
+    send('abort-run', {});
+}
+
+function detectRecursionOnNextRun() {
+    send('detect-recursion-on-next-run', {});
+}
+
 function send(subject, body) {
     $.at.belly.send(subject, body);
 }
 
-// connect to the specified host
 function connect() {
 
     $.at.belly = createBellyRubClient();
@@ -168,6 +182,11 @@ function connect() {
     $.at.belly.handlers['shutdown'] = function (body) {
         window.close();
     };
+    $.at.belly.handlers['recursive-run-result'] = function (body) {
+        console.log(body);
+    };
+
+    
 
     $.at.belly.connect(); 
 };

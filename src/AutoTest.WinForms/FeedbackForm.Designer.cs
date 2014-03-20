@@ -29,7 +29,6 @@ namespace AutoTest.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeedbackForm));
             this.runFeedback = new AutoTest.UI.RunFeedback();
             this.SuspendLayout();
             // 

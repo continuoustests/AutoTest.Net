@@ -11,6 +11,7 @@ using AutoTest.Core.FileSystem;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.RunResultCache;
+using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Caching;
@@ -19,53 +20,7 @@ using AutoTest.Core.Launchers;
 using AutoTest.Server.Handlers;
 
 namespace AutoTest.Server
-{
-    class ConsoleWriter : IWriteDebugInfo
-    {
-        public void SetRecycleSize(long size) {}
-        public void WriteError(string message) {
-            Console.WriteLine(message);
-        }
-        public void WriteInfo(string message) {
-            Console.WriteLine(message);
-        }
-        public void WriteDebug(string message) {
-            Console.WriteLine(message);
-        }
-        public void WritePreProcessor(string message) {
-            Console.WriteLine(message);
-        }
-        public void WriteDetail(string message) {
-            Console.WriteLine(message);
-        }
-    }
-
-    public class Arguments
-    {
-        public string WatchToken { get; set; }
-        public string ConfigurationLocation { get; set; }
-        public bool Help { get; set; }
-    }
-
-    public class ArgumentParser
-    {
-        public static Arguments Parse(string[] arguments)
-        {
-            var parsed = new Arguments();
-            foreach (var argument in arguments) {
-                if (!argument.StartsWith("--")) {
-                    parsed.WatchToken = argument;
-                } else {
-                    if (argument.StartsWith("--local-config-location="))
-                        parsed.ConfigurationLocation = argument.Replace("--local-config-location=", "");
-                    else if (argument.StartsWith("--help"))
-                        parsed.Help = true;
-                }
-            }
-            return parsed;
-        }
-    }
-    
+{    
     static class Program
     {
         /// <summary>
@@ -142,7 +97,8 @@ namespace AutoTest.Server
             var bus = BootStrapper.Services.Locate<IMessageBus>();
             var cache = BootStrapper.Services.Locate<ICache>();
             var handlers = new List<IHandler>();
-            handlers.Add(new RunHandler(bus));
+            var recursiveConsumer = (RecursiveRunCauseConsumer)BootStrapper.Services.Locate<IConsumerOf<FileChangeMessage>>("RecursiveRunConsumer");
+            handlers.Add(new RunHandler(bus, recursiveConsumer));
             handlers.Add(new GoToHandler(launcher));
             handlers.Add(new TriggerRunHandler(cache, bus));
             handlers.Add(new ShutdownHandler());
@@ -150,6 +106,32 @@ namespace AutoTest.Server
             handlers.Add(new StatusHandler());
 
             return handlers;
+        }
+    }
+
+    public class Arguments
+    {
+        public string WatchToken { get; set; }
+        public string ConfigurationLocation { get; set; }
+        public bool Help { get; set; }
+    }
+
+    public class ArgumentParser
+    {
+        public static Arguments Parse(string[] arguments)
+        {
+            var parsed = new Arguments();
+            foreach (var argument in arguments) {
+                if (!argument.StartsWith("--")) {
+                    parsed.WatchToken = argument;
+                } else {
+                    if (argument.StartsWith("--local-config-location="))
+                        parsed.ConfigurationLocation = argument.Replace("--local-config-location=", "");
+                    else if (argument.StartsWith("--help"))
+                        parsed.Help = true;
+                }
+            }
+            return parsed;
         }
     }
 }

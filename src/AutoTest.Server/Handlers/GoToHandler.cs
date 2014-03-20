@@ -7,7 +7,6 @@ namespace AutoTest.Server.Handlers
 {
 	class GoToHandler : IHandler, IClientHandler
 	{
-        private Action<string, object> _dispatcher;
         private IApplicatonLauncher _launcher;
 
         public GoToHandler(IApplicatonLauncher launcher) {
@@ -15,7 +14,6 @@ namespace AutoTest.Server.Handlers
         }
 
         public void DispatchThrough(Action<string, object> dispatcher) {
-            _dispatcher = dispatcher;
         }
 
         public Dictionary<string, Action<dynamic>> GetClientHandlers() {

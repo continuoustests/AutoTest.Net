@@ -11,7 +11,7 @@
             <div id="{{id}}_details" class="listitemDetailsHidden">
                 Project: {{error.project}}<br>
                 File: <div name="link" class="listitemLink">
-                    <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="send('goto', { file: '{{error.build_item.file}}', line: {{error.build_item.line_number}}, column: {{error.build_item.line_position}} });">{{error.build_item.file}}:{{error.build_item.line_number}}:{{error.build_item.line_position}}</a>
+                    <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="openInEditor('{{error.build_item.file}}', {{error.build_item.line_number}}, {{error.build_item.line_position}});">{{error.build_item.file}}:{{error.build_item.line_number}}:{{error.build_item.line_position}}</a>
                 </div><br>
                 Message: <br>
                 {{error.build_item.error_message}}
@@ -31,7 +31,7 @@
                 Stack trace:<br>
                 {{#each failed.test.stack_trace}}
                     at {{method}} in <div name="link" class="listitemLink">
-                        <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="send('goto', { file: '{{file}}', line: {{line_number}}, column: 0});">{{file}}:{{line_number}}</a>
+                        <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="openInEditor('{{file}}', {{line_number}}, 0);">{{file}}:{{line_number}}</a>
                     </div>
                 {{/each}}
             </div>
@@ -50,7 +50,7 @@
                 Stack trace:<br>
                 {{#each ignored.test.stack_trace}}
                     at {{method}} in <div name="link" class="listitemLink">
-                        <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="send('goto', { file: '{{file}}', line: {{line_number}}, column: 0});">{{file}}:{{line_number}}</a>
+                        <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="openInEditor('{{file}}', {{line_number}}, 0});">{{file}}:{{line_number}}</a>
                     </div>
                 {{/each}}
             </div>
@@ -60,7 +60,7 @@
             <div id="{{id}}_details" class="listitemDetailsHidden">
                 Project: {{warning.project}}<br>
                 File: <div name="link" class="listitemLink">
-                    <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="send('goto', { file: '{{warning.build_item.file}}', line: {{warning.build_item.line_number}}, column: {{warning.build_item.line_position}} });">{{warning.build_item.file}}:{{warning.build_item.line_number}}:{{warning.build_item.line_position}}</a>
+                    <a name="linkHref" href="javascript:void(0)" class="listitemLinkHref" onclick="openInEditor('{{warning.build_item.file}}', {{warning.build_item.line_number}}, {{warning.build_item.line_position}});">{{warning.build_item.file}}:{{warning.build_item.line_number}}:{{warning.build_item.line_position}}</a>
                 </div><br>
                 Message: <br>
                 {{warning.build_item.error_message}}
@@ -69,10 +69,12 @@
     </script>
 </head> 
 <body>
-    <a href="javascript:void(0)" onclick="send('build-test-all', {});">Build and test all</a>
+
+    <a href="javascript:void(0)" onclick="buildAndTestAll();">Build and test all</a>
+    <a href="javascript:void(0)" onclick="detectRecursionOnNextRun();">Detect recursive run</a>
     <img id="status-picture" class="statusImage" src="" />
     <div id="status" class="statusText"></div>
-    <a href="javascript:void(0)" onclick="send('abort-run', {});">Abort</a>
+    <a href="javascript:void(0)" onclick="abortRun();">Abort</a>
     <div id="list" class="itemList"></div>
 
     <script type="text/javascript" src="js/jquery.min.js"></script>

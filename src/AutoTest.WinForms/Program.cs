@@ -47,8 +47,6 @@ namespace AutoTest.WinForms
                 overviewForm.SetWatchDirectory(directoryToWatch);
 			    notifyOnLoggingSetup();
 
-                var cache = BootStrapper.Services.Locate<AutoTest.Core.Caching.ICache>();
-                var configuration = BootStrapper.Services.Locate<IConfiguration>();
                 using (var watcher = BootStrapper.Services.Locate<IDirectoryWatcher>())
                 {
                     if (arguments.ConfigurationLocation != null) {

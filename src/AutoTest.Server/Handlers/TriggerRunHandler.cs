@@ -10,7 +10,6 @@ namespace AutoTest.Server.Handlers
 {
 	class TriggerRunHandler : IHandler, IClientHandler
 	{
-        private Action<string, object> _dispatcher;
         private ICache _cache;
         private IMessageBus _bus;
 
@@ -20,7 +19,6 @@ namespace AutoTest.Server.Handlers
         }
 
         public void DispatchThrough(Action<string, object> dispatcher) {
-            _dispatcher = dispatcher;
         }
 
         public Dictionary<string, Action<dynamic>> GetClientHandlers() {
