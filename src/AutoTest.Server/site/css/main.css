@@ -1,3 +1,9 @@
+.statusText {
+}
+.statusImage {
+}
+.itemList {
+}
 .listitem {
 }
 .listitemSelected {
@@ -19,4 +25,12 @@
 }
 .listitemLinkHrefSelected {
     background-color: lightgray;
+}
+.errorItem {
+}
+.warningItem {
+}
+.failedItem {
+}
+.ignoredItem {
 }

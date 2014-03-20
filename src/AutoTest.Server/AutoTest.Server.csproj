@@ -48,18 +48,7 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\..\lib\Nancy\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self">
-      <HintPath>..\..\lib\Nancy\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\JSON.NET\Net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>..\..\lib\websocket-sharp\websocket-sharp.dll</HintPath>
-    </Reference>
+    <Reference Include="..\..\lib\BellyRub\BellyRub.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HiddenGetFocusForm.cs">
@@ -92,7 +81,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Communication\MessageEndpoint.cs" />
-    <Compile Include="BellyRub\Engine.cs" />
+    <Compile Include="Handlers\RunHandler.cs" />
+    <Compile Include="Handlers\IHandler.cs" />
+    <Compile Include="Handlers\GoToHandler.cs" />
+    <Compile Include="Handlers\TriggerRunHandler.cs" />
+    <Compile Include="Handlers\ShutdownHandler.cs" />
+    <Compile Include="Handlers\FocusHandler.cs" />
+    <Compile Include="Handlers\RunItemHandler.cs" />
+    <Compile Include="Handlers\StatusHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

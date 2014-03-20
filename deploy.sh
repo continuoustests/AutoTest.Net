@@ -36,6 +36,7 @@ cp $BINARYDIR/AutoTest.UI.dll $DEPLOYDIR/AutoTest.UI.dll
 cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
 cp $BINARYDIR/AutoTest.Server.exe $DEPLOYDIR/AutoTest.Server.exe
+cp $BINARYDIR/BellyRub.dll $DEPLOYDIR/BellyRub.dll
 cp $BINARYDIR/Nancy.dll $DEPLOYDIR/Nancy.dll
 cp $BINARYDIR/Nancy.Hosting.Self.dll $DEPLOYDIR/Nancy.Hosting.Self.dll
 cp $BINARYDIR/Newtonsoft.Json.dll $DEPLOYDIR/Newtonsoft.Json.dll

@@ -1,64 +1,11 @@
 var pageTitle = 'AutoTest.Net';
 $.at = new Object();
-$.at.belly = new Object();
 $.at.errors = new Object();
 $.at.warnings = new Object()
 $.at.failures = new Object()
 $.at.ignored = new Object()
 $.at.selectedItem = 0;
 $.at.selectedLink = 0;
-
-$.at.handlers = new Object();
-$.at.handlers['status-information'] = function (body) {
-    $('#status').text(body.message);
-};
-$.at.handlers['picture-update'] = function (body) {
-    console.log('pic: ' + body.state);
-    var img = 'graphics/circleAbort.png';
-    if (body.state === 'progress')
-        img = 'graphics/progress.gif';
-    else if (body.state === 'green')
-        img = 'graphics/circleWIN.png';
-    else if (body.state === 'red')
-        img = 'graphics/circleFAIL.png';
-    $('#status-picture').attr('src', img);
-};
-$.at.handlers['add-item'] = function (body) {
-    console.log(body);
-    if (body.type === 'Build error')
-        $.at.errors[body.id] = body;
-    else if (body.type === 'Build warning')
-        $.at.warnings[body.id] = body;
-    else if (body.type === 'Test failed')
-        $.at.failures[body.id] = body;
-    else if (body.type === 'Test ignored')
-        $.at.ignored[body.id] = body;
-    updateList();
-};
-$.at.handlers['remove-builditem'] = function (body) {
-    removeListItem($.at.errors, $.at.warnings, body.id);
-    updateList();
-};
-$.at.handlers['remove-testitem'] = function (body) {
-    removeListItem($.at.failures, $.at.ignored, body.id);
-    updateList();
-};
-$.at.handlers['remove-builditems'] = function (body) {
-    for (var i = body.ids.length - 1; i >= 0; i--) {
-        removeListItem($.at.errors, $.at.warnings, body.ids[i]);
-    };
-    updateList();
-};
-$.at.handlers['selected-store'] = function (body) {
-};
-$.at.handlers['selected-restore'] = function (body) {
-};
-$.at.handlers['run-completed'] = function (body) {
-    selectItem(getFirstItem());
-};
-$.at.handlers['shutdown'] = function (body) {
-    window.close();
-};
 
 $(document).ready(function() {
 
@@ -67,11 +14,9 @@ $(document).ready(function() {
     $(window).keydown(keydown);
 
     if ("WebSocket" in window) {
-        debug("Browser supports web sockets!", 'success');
-        connect('ws://localhost:1235/chat');
-        $('#console_send').removeAttr('disabled');
+        connect();
     } else {
-        debug("Browser does not support web sockets", 'error');
+        console.log("Browser does not support web sockets", 'error');
     };
 
     Handlebars.registerHelper('isSelected', function(item, options) {
@@ -84,7 +29,6 @@ $(document).ready(function() {
 
 function keydown(e) {
     var keyCode = e.keyCode;
-    console.log(keyCode);
 
     if (keyCode === 34) { // PgDown
         selectItem(getItemByOffset(10));
@@ -114,7 +58,7 @@ function keydown(e) {
         }
         if (keyCode === 74) { // j
             selectLink(details, $.at.selectedLink + 1);
-            return false;
+            return true;
         }
         if (keyCode === 75) { // k
             selectLink(details, $.at.selectedLink - 1);
@@ -128,7 +72,7 @@ function keydown(e) {
     }
     if (keyCode === 74) { // j
         selectItem(getNextItem());
-        return false;
+        return true;
     }
     if (keyCode === 75) { // k
         selectItem(getPreviousItem());
@@ -143,59 +87,90 @@ function keydown(e) {
 
 // function to send data on the web socket
 function send(subject, body) {
-    try {
-        var str = JSON.stringify({subject: subject, body: body});
-        $.at.belly.send(str);
-    } catch (err) {
-        debug(err, 'error');
-    }
+    $.at.belly.send(subject, body);
 }
 
 // connect to the specified host
-function connect(host) {
+function connect() {
 
-    debug("Connecting to " + host + " ...");
-    try {
-        $.at.belly = new WebSocket(host); // create the web socket
-    } catch (err) {
-        debug(err, 'error');
-    }
-    $('#host_connect').attr('disabled', true); // disable the 'reconnect' button
-
-    $.at.belly.onopen = function () {
-        document.title = pageTitle + ' - Connected';
+    $.at.belly = createBellyRubClient();
+    $.at.belly.onconnected = function() {
+        $.at.belly.request('get-token-path', {}, function (body) {
+            document.title = pageTitle + ' - ' + body.token;
+        });
     };
-
-    $.at.belly.onmessage = function (event) {
-        var payload = jQuery.parseJSON(event.data);
-        $.at.handlers[payload.subject](payload.body);
-    };
-
-    $.at.belly.onclose = function () {
+    $.at.belly.ondisconnected = function() {
         document.title = pageTitle + ' - Disconnected';
+        // Fool firefox into thinking it can close the window
+        window.open('','_parent',''); 
+        window.close(); 
     };
+    $.at.belly.handlers['shutdown'] = function (body) {
+        client.disconnect();
+    };
+    window.onbeforeunload = function () {
+        $.at.belly.disconnect();
+    };
+
+    $.at.belly.handlers['run-started'] = function (body) {
+        console.log('run started');
+    };
+    $.at.belly.handlers['run-finished'] = function (body) {
+        console.log('run finished');
+    };
+    $.at.belly.handlers['status-information'] = function (body) {
+        $('#status').text(body.message);
+    };
+    $.at.belly.handlers['picture-update'] = function (body) {
+        console.log('pic: ' + body.state);
+        var img = 'graphics/circleAbort.png';
+        if (body.state === 'progress')
+            img = 'graphics/progress.gif';
+        else if (body.state === 'green')
+            img = 'graphics/circleWIN.png';
+        else if (body.state === 'red')
+            img = 'graphics/circleFAIL.png';
+        $('#status-picture').attr('src', img);
+    };
+    $.at.belly.handlers['add-item'] = function (body) {
+        console.log(body);
+        if (body.type === 'Build error')
+            $.at.errors[body.id] = body;
+        else if (body.type === 'Build warning')
+            $.at.warnings[body.id] = body;
+        else if (body.type === 'Test failed')
+            $.at.failures[body.id] = body;
+        else if (body.type === 'Test ignored')
+            $.at.ignored[body.id] = body;
+        updateList();
+    };
+    $.at.belly.handlers['remove-builditem'] = function (body) {
+        removeListItem($.at.errors, $.at.warnings, body.id);
+        updateList();
+    };
+    $.at.belly.handlers['remove-testitem'] = function (body) {
+        removeListItem($.at.failures, $.at.ignored, body.id);
+        updateList();
+    };
+    $.at.belly.handlers['remove-builditems'] = function (body) {
+        for (var i = body.ids.length - 1; i >= 0; i--) {
+            removeListItem($.at.errors, $.at.warnings, body.ids[i]);
+        };
+        updateList();
+    };
+    $.at.belly.handlers['selected-store'] = function (body) {
+    };
+    $.at.belly.handlers['selected-restore'] = function (body) {
+    };
+    $.at.belly.handlers['run-summary'] = function (body) {
+        selectItem(getFirstItem());
+    };
+    $.at.belly.handlers['shutdown'] = function (body) {
+        window.close();
+    };
+
+    $.at.belly.connect(); 
 };
-
-// function to display stuff, the second parameter is the class of the <p> (used for styling)
-function debug(msg, type) {
-    console.log(msg);
-};
-
-// the user clicked to 'reconnect' button
-$('#host_connect').click(function () {
-    debug("\n");
-    connect($('#host').val());
-});
-
-// the user clicked the send button
-$('#console_send').click(function () {
-    ws_send($('#console_input').val());
-});
-
-$('#console_input').keyup(function (e) {
-    if(e.keyCode == 13) // enter is pressed
-        ws_send($('#console_input').val());
-});
 
 function removeListItem(list1, list2, id) {
     if (id in list1) {
@@ -215,6 +190,11 @@ function updateList() {
         failures: $.at.failures,
         ignored: $.at.ignored
     });
+}
+
+function itemClicked(id) {
+    selectItem(id);
+    showInformation();
 }
 
 function showInformation() {
