@@ -6,7 +6,6 @@ namespace AutoTest.Server.Handlers
 {
 	class FocusHandler : IHandler
 	{
-        private Action<string, object> _dispatch;
         private Browser _browser;
 
         public FocusHandler(Browser browser) {
@@ -14,7 +13,6 @@ namespace AutoTest.Server.Handlers
         }
 
         public void DispatchThrough(Action<string, object> dispatcher) {
-            _dispatch = dispatcher;
         }
 
         public void OnInternalMessage(object message) {

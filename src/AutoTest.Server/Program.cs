@@ -93,9 +93,11 @@ namespace AutoTest.Server
         }
 
         static List<IHandler> createHandlers() {
+            var watcher = BootStrapper.Services.Locate<IDirectoryWatcher>();
             var launcher = BootStrapper.Services.Locate<IApplicatonLauncher>();
             var bus = BootStrapper.Services.Locate<IMessageBus>();
             var cache = BootStrapper.Services.Locate<ICache>();
+            var resultCache = BootStrapper.Services.Locate<IMergeRunResults>();
             var handlers = new List<IHandler>();
             var recursiveConsumer = (RecursiveRunCauseConsumer)BootStrapper.Services.Locate<IConsumerOf<FileChangeMessage>>("RecursiveRunConsumer");
             handlers.Add(new RunHandler(bus, recursiveConsumer));
@@ -104,6 +106,7 @@ namespace AutoTest.Server
             handlers.Add(new ShutdownHandler());
             handlers.Add(new RunItemHandler());
             handlers.Add(new StatusHandler());
+            handlers.Add(new EngineControlHandler(watcher, resultCache));
 
             return handlers;
         }

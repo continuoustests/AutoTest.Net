@@ -101,8 +101,26 @@ function detectRecursionOnNextRun() {
     send('detect-recursion-on-next-run', {});
 }
 
+function pauseEngine() {
+    send('engine-pause', {});   
+}
+
+function resumeEngine() {
+    send('engine-resume', {});   
+}
+
+function getEngineState(response) {
+    request('get-engine-state', {}, function (body) {
+        response(body);
+    });
+}
+
 function send(subject, body) {
     $.at.belly.send(subject, body);
+}
+
+function request(subject, body, response) {
+    $.at.belly.send(subject, body, response);
 }
 
 function connect() {

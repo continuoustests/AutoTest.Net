@@ -89,6 +89,7 @@
     <Compile Include="Handlers\FocusHandler.cs" />
     <Compile Include="Handlers\RunItemHandler.cs" />
     <Compile Include="Handlers\StatusHandler.cs" />
+    <Compile Include="Handlers\EngineControlHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
