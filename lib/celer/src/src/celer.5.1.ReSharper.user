@@ -1,0 +1,275 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="IFixtureRunner`0" priority="1" />
+      <Item value="fixture" priority="1" />
+      <Item value="public" priority="40" />
+      <Item value="static" priority="5" />
+      <Item value="class" priority="6" />
+      <Item value="Tests" priority="14" />
+      <Item value="void" priority="27" />
+      <Item value="Assert`0" priority="19" />
+      <Item value="throw" priority="5" />
+      <Item value="new" priority="13" />
+      <Item value="Exception" priority="0" />
+      <Item value="NUNitTestFixture`0" priority="2" />
+      <Item value="NUNitTestFixture" priority="0" />
+      <Item value="private" priority="3" />
+      <Item value="string" priority="5" />
+      <Item value="GetRunnerFor`1" priority="1" />
+      <Item value="T`0" priority="10" />
+      <Item value="typeof" priority="3" />
+      <Item value="methodName" priority="1" />
+      <Item value="if" priority="12" />
+      <Item value="method" priority="0" />
+      <Item value="base" priority="0" />
+      <Item value="_testMethod" priority="7" />
+      <Item value="NUnitTestRunner`0" priority="0" />
+      <Item value="SetUpAttribute`0" priority="0" />
+      <Item value="virtual" priority="1" />
+      <Item value="var" priority="17" />
+      <Item value="protected" priority="1" />
+      <Item value="abstract" priority="1" />
+      <Item value="return" priority="17" />
+      <Item value="NUnitTestRunnerSpecification" priority="2" />
+      <Item value="runner" priority="2" />
+      <Item value="RunResult`0" priority="5" />
+      <Item value="_wasRun" priority="0" />
+      <Item value="RunResult" priority="6" />
+      <Item value="bool" priority="1" />
+      <Item value="Type`0" priority="3" />
+      <Item value="Activator`0" priority="0" />
+      <Item value="Public" priority="0" />
+      <Item value="BindingFlags`0" priority="0" />
+      <Item value="null" priority="3" />
+      <Item value="culture" priority="0" />
+      <Item value="try" priority="0" />
+      <Item value="catch" priority="0" />
+      <Item value="Exception`0" priority="2" />
+      <Item value="caught" priority="3" />
+      <Item value="ex" priority="0" />
+      <Item value="_exception" priority="0" />
+      <Item value="exception" priority="0" />
+      <Item value="NUnitTestFixture`0" priority="3" />
+      <Item value="where" priority="0" />
+      <Item value="ITestRunner`0" priority="3" />
+      <Item value="result" priority="8" />
+      <Item value="MightyMooseIgnore" priority="0" />
+      <Item value="ExpectedExceptionAttribute`0" priority="0" />
+      <Item value="ArgumentException`0" priority="1" />
+      <Item value="ArgumentException" priority="0" />
+      <Item value="RunTest`1" priority="0" />
+      <Item value="foreach" priority="7" />
+      <Item value="in" priority="8" />
+      <Item value="a" priority="7" />
+      <Item value="CustomAttributeData`0" priority="1" />
+      <Item value="false" priority="1" />
+      <Item value="expected" priority="0" />
+      <Item value="for" priority="2" />
+      <Item value="int" priority="2" />
+      <Item value="i" priority="6" />
+      <Item value="attributes" priority="2" />
+      <Item value="Length" priority="0" />
+      <Item value="attrdata" priority="0" />
+      <Item value="celer" priority="1" />
+      <Item value="CelerRunner" priority="0" />
+      <Item value="ITestFinder`0" priority="0" />
+      <Item value="MethodsInFixtureTestLocator`0" priority="0" />
+      <Item value="_fixture" priority="0" />
+      <Item value="m" priority="4" />
+      <Item value="ITestFixture`0" priority="1" />
+      <Item value="this" priority="3" />
+      <Item value="ICustomAttributeProviderExtensions`0" priority="0" />
+      <Item value="provider" priority="0" />
+      <Item value="true" priority="0" />
+      <Item value="yield return" priority="4" />
+      <Item value="IEnumerable" priority="9" />
+      <Item value="GetTestRunnersInFixture`0" priority="0" />
+      <Item value="List" priority="0" />
+      <Item value="ConstructorInfo`0" priority="6" />
+      <Item value="else" priority="1" />
+      <Item value="Console`0" priority="2" />
+      <Item value="testFixtures" priority="2" />
+      <Item value="enumerable" priority="1" />
+      <Item value="item" priority="0" />
+      <Item value="_type" priority="0" />
+      <Item value="PrintResult`0" priority="0" />
+      <Item value="Func" priority="0" />
+      <Item value="func" priority="0" />
+      <Item value="input" priority="0" />
+      <Item value="IEnumerable&lt;T&gt;" priority="0" />
+      <Item value="count" priority="0" />
+      <Item value="ret" priority="1" />
+      <Item value="lock" priority="0" />
+      <Item value="_input" priority="0" />
+      <Item value="_enumerator" priority="2" />
+      <Item value="yield break" priority="0" />
+      <Item value="TimeoutException`0" priority="0" />
+      <Item value="Action`0" priority="0" />
+      <Item value="DateTime`0" priority="3" />
+      <Item value="start" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:celer.Core.IFixtureRunner">
+      <Item value="Run`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@NUnit.Framework.Assert">
+      <Item value="That`0" priority="0" />
+      <Item value="IsTrue`0" priority="9" />
+      <Item value="NotNull`0" priority="0" />
+      <Item value="IsNull`0" priority="2" />
+      <Item value="IsNotNull`0" priority="0" />
+      <Item value="AreEqual`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Type">
+      <Item value="GetMethod`0" priority="0" />
+      <Item value="FullName" priority="0" />
+      <Item value="ToString`0" priority="0" />
+      <Item value="GetMethods`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:celer.Core.ITestRunner">
+      <Item value="Run`0" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:celer.Core.RunResult">
+      <Item value="WasRun" priority="3" />
+      <Item value="Passed" priority="3" />
+      <Item value="Exception" priority="3" />
+      <Item value="GetType`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.MethodInfo">
+      <Item value="Invoke`0" priority="0" />
+      <Item value="DeclaringType" priority="0" />
+      <Item value="GetCustomAttributes`0" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Activator">
+      <Item value="CreateInstance`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection.BindingFlags">
+      <Item value="Instance" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Globalization.CultureInfo">
+      <Item value="CurrentCulture" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.CustomAttributeData">
+      <Item value="GetType`0" priority="0" />
+      <Item value="ConstructorArguments" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.CustomAttributeTypedArgument">
+      <Item value="Value" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Exception">
+      <Item value="GetType`0" priority="0" />
+      <Item value="InnerException" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection.CustomAttributeData">
+      <Item value="GetCustomAttributes`0" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.ICustomAttributeProvider">
+      <Item value="GetCustomAttributes`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Cast`1" priority="0" />
+      <Item value="Concat`1" priority="0" />
+      <Item value="ForkAndJoinTo`2" priority="2" />
+      <Item value="Combined`1" priority="1" />
+      <Item value="ToList`1" priority="4" />
+      <Item value="Select`2" priority="0" />
+      <Item value="GetEnumerator`0" priority="1" />
+      <Item value="AsMultiple`1" priority="0" />
+      <Item value="SplitTo`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Console">
+      <Item value="Write`0" priority="0" />
+      <Item value="WriteLine`0" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:celer.Core.ITestFixture">
+      <Item value="Run`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
+      <Item value="ForEach`0" priority="0" />
+      <Item value="Count" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerator`1">
+      <Item value="MoveNext`0" priority="0" />
+      <Item value="Current" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:celer.Core.Extensions.LockedReadFrom`1">
+      <Item value="GetReader`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.DateTime">
+      <Item value="Now" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.TimeSpan">
+      <Item value="ToString`0" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:IRunResultFormatter.cs" caret="0" fromTop="0" />
+      <File id="25F37783-5D2E-425E-BDC4-DCE5B8B625DF/f:MethodNotFoundException.cs" caret="193" fromTop="9" />
+      <File id="558B11FC-82B7-4CC7-8D36-514C3F65F846/f:MightyMooseIgnoreAttribute.cs" caret="176" fromTop="7" />
+      <File id="558B11FC-82B7-4CC7-8D36-514C3F65F846/f:NUnitTestFixture.cs" caret="141" fromTop="7" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:ITestRunner.cs" caret="0" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:ITestFixture.cs" caret="151" fromTop="8" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:ICustomAttributeProviderExtensions.cs" caret="265" fromTop="10" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:AssemblyExtensions.cs" caret="239" fromTop="8" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:TypeExtensions.cs" caret="398" fromTop="7" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:TestRunners/f:NUnitTestRunner.cs" caret="1259" fromTop="9" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="1945" fromTop="14" />
+      <File id="9AF57476-A492-41A9-838A-1DE3E8B7BE3C/f:Program.cs" caret="13" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:RunResult.cs" caret="0" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="9" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:NUnitTestFixture.cs" caret="0" fromTop="0" />
+      <File id="25F37783-5D2E-425E-BDC4-DCE5B8B625DF/f:NUnitTestRunnerTests.cs" caret="13" fromTop="0" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:NUnitTestFixture.cs" caret="597" fromTop="10" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:NUnitTestFixture.cs" caret="68" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:AssemblyExtensions.cs" caret="417" fromTop="10" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="495" fromTop="10" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:RunResult.cs" caret="585" fromTop="13" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:RunResult.cs" caret="687" fromTop="13" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:TypeExtensions.cs" caret="398" fromTop="7" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="512" fromTop="20" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="0" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="1425" fromTop="5" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="495" fromTop="10" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:NUnitTestFixture.cs" caret="482" fromTop="11" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="991" fromTop="17" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="359" fromTop="14" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="359" fromTop="12" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="3154" fromTop="17" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="3183" fromTop="19" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="3076" fromTop="19" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="2803" fromTop="5" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="2137" fromTop="11" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="2202" fromTop="8" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="556" fromTop="2" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="927" fromTop="15" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="663" fromTop="6" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/d:Extensions/f:IEnumerableExtensions.cs" caret="1945" fromTop="14" />
+      <File id="9AF57476-A492-41A9-838A-1DE3E8B7BE3C/f:Program.cs" caret="161" fromTop="8" />
+      <File id="9AF57476-A492-41A9-838A-1DE3E8B7BE3C/f:Program.cs" caret="389" fromTop="12" />
+      <File id="9AF57476-A492-41A9-838A-1DE3E8B7BE3C/f:Program.cs" caret="580" fromTop="16" />
+      <File id="9AF57476-A492-41A9-838A-1DE3E8B7BE3C/f:Program.cs" caret="13" fromTop="0" />
+      <File id="975A51C6-5EAA-43D4-8F24-A2220D899400/f:CelerRunner.cs" caret="438" fromTop="7" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+</Configuration>

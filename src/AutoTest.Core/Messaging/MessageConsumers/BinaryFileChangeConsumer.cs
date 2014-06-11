@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Caching;
 using AutoTest.Core.DebugLog;
@@ -12,16 +13,20 @@ namespace AutoTest.Core.Messaging
 	{
 		private IMessageBus _bus;
 		private IRetrieveAssemblyIdentifiers _assemblyIdBuilder;
+		private IConfiguration _configuration;
 		
-		public BinaryFileChangeConsumer(IMessageBus bus, IRetrieveAssemblyIdentifiers assemblyIdBuilder)
+		public BinaryFileChangeConsumer(IMessageBus bus, IRetrieveAssemblyIdentifiers assemblyIdBuilder, IConfiguration config)
 		{
 			_bus = bus;
 			_assemblyIdBuilder = assemblyIdBuilder;
+			_configuration = config;
 		}
 		
 		#region IConsumerOf[FileChangeMessage] implementation
 		public void Consume(FileChangeMessage message)
 		{
+			if (_configuration.Providers != ".NET")
+				return;
 			
 			Debug.WriteDebug("Consuming filechange through BinaryFileChangeConsumer");
 			var assemblyFiles = new List<ChangedFile>();

@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using AutoTest.Core;
+using AutoTest.Core.Configuration;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using Rhino.Mocks;
@@ -14,14 +15,17 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		private IMessageBus _bus;
 		private IRetrieveAssemblyIdentifiers _assemblyIdProvider;
 		private BinaryFileChangeConsumer _consumer;
+        private IConfiguration _config;
 		private FileChangeMessage _files;
 		
 		[SetUp]
 		public void SetUp()
 		{
 			_bus = MockRepository.GenerateMock<IMessageBus>();
+			_config = MockRepository.GenerateMock<IConfiguration>();
+            _config.Stub(x => x.Providers).Return(".NET");
 			_assemblyIdProvider = MockRepository.GenerateMock<IRetrieveAssemblyIdentifiers>();
-			_consumer = new BinaryFileChangeConsumer(_bus, _assemblyIdProvider);
+			_consumer = new BinaryFileChangeConsumer(_bus, _assemblyIdProvider, _config);
 			_files = new FileChangeMessage();
 		}
 		

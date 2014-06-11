@@ -355,6 +355,12 @@ namespace AutoTest.Test.Core.Configuration
 			_config.ProjectsToIgnore[1].ShouldEqual("FullPathTo/aproject.csproj");
 		}
 
+        [Test]
+        public void Should_get_autotest_provider()
+        {
+            _config.Providers.ShouldEqual("php");
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

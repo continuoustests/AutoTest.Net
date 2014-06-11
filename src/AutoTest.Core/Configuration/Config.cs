@@ -43,6 +43,7 @@ namespace AutoTest.Core.Configuration
         }
 
 		public List<KeyValuePair<string, string>> NUnitEnvironment { get; private set; }
+        public string Providers { get; private set; }
         public string MSBuildAdditionalParameters { get; private set; }
         public int MSBuildParallelBuildCount { get; private set; }
 		public string GrowlNotify { get; private set; }
@@ -156,6 +157,8 @@ namespace AutoTest.Core.Configuration
 		public void Merge(string configuratoinFile)
 		{
 			var core = getConfiguration(configuratoinFile);
+            if (core.Providers.WasReadFromConfig)
+                Providers = core.Providers.Value;
             if (core.StartPaused.WasReadFromConfig)
                 StartPaused = core.StartPaused.Value;
 			mergeVersionedItem(_buildExecutables, core.BuildExecutables);
@@ -219,6 +222,7 @@ namespace AutoTest.Core.Configuration
         {
             try
             {
+                Providers = core.Providers.Value;
                 StartPaused = core.StartPaused.Value;
                 _watchDirectories = core.WatchDirectories.Value;
                 _buildExecutables.AddRange(core.BuildExecutables.Value);
@@ -272,12 +276,12 @@ namespace AutoTest.Core.Configuration
 		}
 		
 		private T mergeValueItem<T>(ConfigItem<T> settingToMerge, T defaultValue)
-		{
-			if (settingToMerge.ShouldExclude)
-				return defaultValue;
-			return settingToMerge.Value;
-		}
-
+        {
+            if (settingToMerge.ShouldExclude)
+                return defaultValue;
+            return settingToMerge.Value;
+        }
+		
 		private void mergeCodeEditor(ConfigItem<CodeEditor> settingToMerge)
 		{
 			if (!settingToMerge.WasReadFromConfig)
@@ -483,7 +487,7 @@ namespace AutoTest.Core.Configuration
             WatchToken = watchToken;
         }
 
-        private Action<bool> _logging = null;
+        private Action<bool> _logging = (isEnabled) => {};
         public void SetLoggerStateAction(Action<bool> setupLogging)
         {
             _logging = setupLogging;

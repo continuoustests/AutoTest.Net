@@ -6,6 +6,7 @@ namespace AutoTest.Core.FileSystem
     {
         bool IsPaused { get; }
 
+    	void LocalConfigurationIsLocatedAt(string path);
         void Pause();
         void Resume();
         void Watch(string path);

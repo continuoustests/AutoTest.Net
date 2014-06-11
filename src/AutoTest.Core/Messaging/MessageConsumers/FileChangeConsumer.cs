@@ -17,15 +17,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
+        private IConfiguration _configuration;
 
-        public FileChangeConsumer(IServiceLocator services, IMessageBus bus)
+        public FileChangeConsumer(IServiceLocator services, IMessageBus bus, IConfiguration config)
         {
             _services = services;
             _bus = bus;
+            _configuration = config;
         }
 
         public void Consume(FileChangeMessage message)
         {
+            if (_configuration.Providers != ".NET")
+                return;
+
             Debug.ConsumingFileChange(message);
             var totalListOfProjects = new List<ChangedFile>();
             var locators = _services.LocateAll<ILocateProjects>();

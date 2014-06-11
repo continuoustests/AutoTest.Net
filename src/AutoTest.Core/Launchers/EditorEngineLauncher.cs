@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Configuration;
 using System.IO;
@@ -17,6 +18,9 @@ namespace AutoTest.Core.Launchers
 		private IMessageBus _bus;		
 		private string _path = null;
 		private SocketClient _client = null;
+		private SocketClient _eventendpoint = null;
+        private Thread _shutdownWhenDisconnected = null;
+        private bool _eventPointShutdownTriggered = false;
 		
 		public EditorEngineLauncher(IMessageBus bus)
 		{
@@ -30,13 +34,14 @@ namespace AutoTest.Core.Launchers
 				_client.Disconnect();
 			_client = null;
 			isConnected();
+			connectToEventEndpoint();
 		}
 		
 		public void GoTo(string file, int line, int column)
 		{
 			if (!isConnected())
 				return;
-			_client.Send(string.Format("goto {0}|{1}|{2}", file, line, column));
+			send(string.Format("goto {0}|{1}|{2}", file, line, column));
 		}
 
 		public void Consume(BuildRunMessage message) {
@@ -44,7 +49,7 @@ namespace AutoTest.Core.Launchers
 			var state = "succeeded";
 			if (message.Results.ErrorCount > 0)
 				state = "failed";
-			_client.Send(
+			send(
 				string.Format("autotest.net build \"{0}\" {1}",
 					message.Results.Project,
 					state));
@@ -55,7 +60,7 @@ namespace AutoTest.Core.Launchers
 			var state = "succeeded";
 			if (message.Results.Failed.Length > 0)
 				state = "failed";
-			_client.Send(
+			send(
 				string.Format("autotest.net testrun \"{0}\" {1} {2}",
 					message.Results.Assembly,
 					message.Results.Runner.ToString(),
@@ -64,31 +69,34 @@ namespace AutoTest.Core.Launchers
 		
 		public void Consume(RunStartedMessage message) {
 			if (!isConnected()) return;
-			_client.Send("autotest.net runstarted");
+			send("autotest.net runstarted");
 		}
 		
 		public void Consume(RunFinishedMessage message) {
 			if (!isConnected()) return;
-			_client.Send(
+			send(
 				string.Format("autotest.net runfinished {0} {1}",
 					message.Report.NumberOfBuildsFailed,
 					message.Report.NumberOfTestsFailed));
 		}
 		
+        private object _clientLock = new object();
 		private bool isConnected()
 		{
 			try
 			{
 				if (_client != null && _client.IsConnected)
 					return true;
-				var instance = new EngineLocator().GetInstance(_path);
+				var instance = new InstanceLocator("EditorEngine").GetInstance(_path);
 				if (instance == null)
 					return false;
 				_client = new SocketClient();
 				_client.IncomingMessage += Handle_clientIncomingMessage;
 				_client.Connect(instance.Port);
-				if (_client.IsConnected)
+				if (_client.IsConnected) {
+					startBackgroundShutdownHandler();
 					return true;
+				}
 				_client = null;
 				return false;
 			}
@@ -96,7 +104,49 @@ namespace AutoTest.Core.Launchers
 			{
 				Debug.WriteError(ex.ToString());
 				return false;
+            }
+		}
+
+        
+		private void connectToEventEndpoint()
+		{
+			try
+			{
+				if (_eventendpoint != null && _eventendpoint.IsConnected)
+					return;
+				var instance = new InstanceLocator("OpenIDE.Events").GetInstance(_path);
+				if (instance == null) {
+					return;
+				}
+				_eventendpoint = new SocketClient();
+				_eventendpoint.IncomingMessage += Handle_eventIncomingMessage;
+				_eventendpoint.Connect(instance.Port);
+				if (_eventendpoint.IsConnected) {
+					startBackgroundShutdownHandler();
+					return;
+				}
+				_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 			}
+			catch (Exception ex)
+			{
+				Debug.WriteError(ex.ToString());
+			}
+		}
+
+		private void startBackgroundShutdownHandler()
+		{
+			if (_shutdownWhenDisconnected != null)
+				return;
+			_shutdownWhenDisconnected = new Thread(exitWhenDisconnected);
+			_shutdownWhenDisconnected.Start();
+		}
+
+		private void exitWhenDisconnected()
+		{
+			while (isConnected() && !_eventPointShutdownTriggered) {
+				Thread.Sleep(200);
+			}
+			_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 		}
 
 		void Handle_clientIncomingMessage(object sender, IncomingMessageArgs e)
@@ -104,10 +154,29 @@ namespace AutoTest.Core.Launchers
 			Debug.WriteDebug("Dispatching editor message: " + e.Message);
 			_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
 		}
+
+		void Handle_eventIncomingMessage(object sender, IncomingMessageArgs e)
+		{
+			if (e.Message == "shutdown")
+				_eventPointShutdownTriggered = true;
+		}
+
+		private void send(string message)
+		{
+			Debug.WriteDebug("Sending to editor engine: " + message);
+			_client.Send(message);
+		}
 	}
 	
-	class EngineLocator
+	class InstanceLocator
 	{
+		private string _instanceFileDirectory;
+
+		public InstanceLocator(string instanceFileDirectory)
+		{
+			_instanceFileDirectory = instanceFileDirectory;
+		}
+
 		public Instance GetInstance(string path)
 		{
 			var instances = getInstances(path);
@@ -118,7 +187,7 @@ namespace AutoTest.Core.Launchers
 		
 		private IEnumerable<Instance> getInstances(string path)
 		{
-			var dir = Path.Combine(Path.GetTempPath(), "EditorEngine");
+			var dir = Path.Combine(Path.GetTempPath(), _instanceFileDirectory);
 			if (Directory.Exists(dir))
 			{
 				foreach (var file in Directory.GetFiles(dir, "*.pid"))

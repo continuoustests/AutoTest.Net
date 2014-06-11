@@ -32,3 +32,7 @@ AutoTest.config.old
 *.swp
 *.nupkg
 /AutoTest.NET.sln.DotSettings.user
+*.sublime-project
+*.sublime-workspace
+.OpenIDE/active.profile
+oi-definitions.json

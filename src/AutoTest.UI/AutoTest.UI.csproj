@@ -80,6 +80,7 @@
     <Compile Include="RunFeedback.designer.cs">
       <DependentUpon>RunFeedback.cs</DependentUpon>
     </Compile>
+    <Compile Include="FeedbackProvider.cs" />
     <Compile Include="RunMessages.cs" />
     <Compile Include="RunMessageType.cs" />
     <Compile Include="SummaryBuilder.cs" />

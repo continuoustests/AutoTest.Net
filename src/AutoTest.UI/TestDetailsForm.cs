@@ -17,6 +17,8 @@ namespace AutoTest.UI
         public TestDetailsForm(Action<string, int> gotToLink, Func<string, string, bool> goToType, int x, int y, string message, string caption, List<Link> links, int maxWidth)
         {
             InitializeComponent();
+            if (!isNix())
+                AutoSize = true;
             SuspendLayout();
             _goToLink = gotToLink;
             _goToType = goToType;
@@ -29,6 +31,17 @@ namespace AutoTest.UI
             SetCaption(caption);
             SetText(message, links, maxWidth);
             ResumeLayout();
+            if (isNix()) {
+                Width = textBoxContent.Left + textBoxContent.Width + 20;
+                Height = textBoxContent.Top + textBoxContent.Height + 40;
+            }
+        }
+
+        private bool isNix()
+        {
+            return 
+                Environment.OSVersion.Platform == PlatformID.Unix ||
+                Environment.OSVersion.Platform == PlatformID.MacOSX;
         }
 
         public void SetCaption(string text)
@@ -53,8 +66,9 @@ namespace AutoTest.UI
             textBoxContent.SelectionStart = 0;
             textBoxContent.SelectionLength = 0;
 
-            Height = 10;
-            Width = 10;
+            if (!isNix())
+                Height = (textBoxContent.Top * 2) + textBoxContent.Height;
+
             textBoxFocusHolder.Select();
             positionArrow();
         }

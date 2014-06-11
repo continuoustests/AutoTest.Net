@@ -25,7 +25,6 @@ namespace AutoTest.Core.DebugLog
 
         private static void writeInfo(string text)
         {
-            int a = 9;
             if (_isDisabled) return;
             _debugWriter.WriteInfo(text);
         }

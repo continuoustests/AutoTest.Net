@@ -32,18 +32,29 @@ namespace AutoTest.WinForms
 			{
 				if (userWantedCommandLineHelpPrinted(args))
 					return;
-                string directoryToWatch = getPossibleCommandArgs(args);
+                var arguments = getPossibleCommandArgs(args);
+                string directoryToWatch = null; 
+                if (arguments.WatchToken != null) {
+                    var tokenExists = Directory.Exists(arguments.WatchToken) || File.Exists(arguments.WatchToken);
+                    if (arguments.WatchToken.Contains(".." + Path.DirectorySeparatorChar) || !tokenExists)
+                        directoryToWatch = new PathParser(Environment.CurrentDirectory).ToAbsolute(arguments.WatchToken);
+                    else
+                        directoryToWatch = arguments.WatchToken;
+                }
                 if ((directoryToWatch = ConfigureApplication(directoryToWatch)) == null)
                     return;
         	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
                 overviewForm.SetWatchDirectory(directoryToWatch);
 			    notifyOnLoggingSetup();
 
-                var assemblies = new List<string>();
-                var cache = BootStrapper.Services.Locate<AutoTest.Core.Caching.ICache>();
-                var configuration = BootStrapper.Services.Locate<IConfiguration>();
                 using (var watcher = BootStrapper.Services.Locate<IDirectoryWatcher>())
                 {
+                    if (arguments.ConfigurationLocation != null) {
+                        var configurationLocation = arguments.ConfigurationLocation;
+                        if (Directory.Exists(Path.Combine(directoryToWatch, configurationLocation)))
+                            configurationLocation = Path.Combine(directoryToWatch, configurationLocation);
+                        watcher.LocalConfigurationIsLocatedAt(configurationLocation);
+                    }
                     watcher.Watch(directoryToWatch);
                     var proxy = BootStrapper.Services.Locate<IMessageProxy>();
                     proxy.SetMessageForwarder(overviewForm.Form);
@@ -72,16 +83,14 @@ namespace AutoTest.WinForms
 			Console.WriteLine("AutoTest.WinForms.exe command line arguments");
 			Console.WriteLine("");
 			Console.WriteLine("To specify watch directory on startup you can type:");
-			Console.WriteLine("\tAutoTest.WinForms.exe \"Path to the directory you want\"");
+			Console.WriteLine("\tAutoTest.WinForms.exe [WATCH_DIRECTORY] [--local-config-location=/path]");
 		}
 
-        private static string getPossibleCommandArgs(string[] args)
+        private static Arguments getPossibleCommandArgs(string[] args)
         {
             if (args == null)
                 return null;
-            if (args.Length != 1)
-                return null;
-            return args[0];
+            return ArgumentParser.Parse(args);
         }
 
 		private static void logException (Exception exception)

@@ -24,7 +24,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
         private IBuildSessionRunner _buildRunner;
-        private IConfiguration _configuration;
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
@@ -39,7 +38,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             _bus = bus;
             _listGenerator = listGenerator;
-            _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;
 			_testAssemblyValidator = testAssemblyValidator;
@@ -139,7 +137,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
-            int a = 3;
             Debug.WriteDebug("Running test preprosessor");
             var preProcessed = preProcessTestRun(projectList);
             preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());

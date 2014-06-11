@@ -54,7 +54,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
         {
             _cache.Stub(x => x.Failed).Return(new TestItem[] { });
 
-            var test = new AutoTest.TestRunners.Shared.Results.TestResult("", "", "", 0, "Passing test", AutoTest.TestRunners.Shared.Results.TestState.Passed, "");
+            new AutoTest.TestRunners.Shared.Results.TestResult("", "", "", 0, "Passing test", AutoTest.TestRunners.Shared.Results.TestState.Passed, "");
             _feedback.TestStarted("");
             _feedback.TestStarted("");
             _feedback.TestStarted("");

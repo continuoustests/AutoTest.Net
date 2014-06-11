@@ -213,6 +213,16 @@
     <Compile Include="Launchers\SocketClient.cs" />
     <Compile Include="Launchers\Instance.cs" />
     <Compile Include="Launchers\IApplicatonLauncher.cs" />
+    <Compile Include="Messaging\MessageConsumers\PhpFileChangeConsumer.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\PhpUnitRunner.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\PhpUnitParseErrorParser.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\JUnitXmlParser.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\PhpRunHandler.cs" />
+    <Compile Include="Processes\ProcessExtensions.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\PhpUnitLiveParser.cs" />
+    <Compile Include="ForeignLanguageProviders\Php\PhpFileConventionMatcher.cs" />
+    <Compile Include="DebugLog\ConsoleWriter.cs" />
+    <Compile Include="Messaging\MessageConsumers\RecursiveRunCauseConsumer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

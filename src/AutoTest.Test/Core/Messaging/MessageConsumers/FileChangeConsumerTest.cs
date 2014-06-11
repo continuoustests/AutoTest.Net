@@ -20,6 +20,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
     {
         private IServiceLocator _services;
         private IMessageBus _bus;
+        private IConfiguration _config;
         private FileChangeConsumer _subject;
 
         [SetUp]
@@ -27,7 +28,9 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         {
             _services = MockRepository.GenerateMock<IServiceLocator>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _subject = new FileChangeConsumer(_services, _bus);
+            _config = MockRepository.GenerateMock<IConfiguration>();
+            _config.Stub(x => x.Providers).Return(".NET");
+            _subject = new FileChangeConsumer(_services, _bus, _config);
         }
 
         [Test]

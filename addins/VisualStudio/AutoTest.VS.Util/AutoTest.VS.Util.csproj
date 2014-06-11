@@ -75,6 +75,7 @@
     <Compile Include="Navigation\TypeNavigation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaverOfFilesThatVSKeepsStashigInMem.cs" />
+    <Compile Include="SolutionSettings\DefinesReader.cs" />
     <Compile Include="SolutionStateHandler.cs" />
     <Compile Include="SourceParsers\SpecFlowFeatureParser.cs" />
     <Compile Include="TypesFromCursorPosition.cs" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,422 +13,209 @@ namespace AutoTest.UI
 {
     public partial class RunFeedback : UserControl
     {
-        private readonly SynchronizationContext _syncContext;
+        private object _selected = null;
+        private FeedbackProvider _provider;
+
+        public void SetFeedbackProvider(FeedbackProvider provider) {
+            _provider = provider;
+
+            _provider
+                .OnGoToReference(
+                    (file,line,column) => {
+                        if (GoToReference != null)
+                            GoToReference(this, new GoToReferenceArgs(new CodePosition(file, line, column)));
+                    })
+                .OnGoToType(
+                    (assembly,typename) => {
+                        var args = new GoToTypeArgs(assembly, typename);
+                        if (GoToType != null)
+                            GoToType(this, args);
+                        return args.Handled;
+                    })
+                .OnDebugTest(
+                    (test) => {
+                        if (DebugTest != null)
+                            DebugTest(this, new DebugTestArgs(test));
+                    })
+                .OnCancelRun(
+                    () => { 
+                        if (CancelRun != null)
+                            CancelRun(this, new EventArgs());
+                    })
+                .OnPrepareForFocus(
+                    () => {
+                        if (listViewFeedback.Items.Count > 0 && listViewFeedback.SelectedItems.Count == 0)
+                            listViewFeedback.Items[0].Selected = true;
+                        listViewFeedback.Select();
+                        _provider.ReOrganize();
+                    })
+                .OnClearList(
+                    () => {
+                        if (!isWindows())
+                            listViewFeedback.SelectedItems.Clear();
+                        listViewFeedback.Items.Clear();
+                    })
+                .OnClearBuilds(
+                    (project) => {
+                        if (!isWindows())
+                            listViewFeedback.SelectedItems.Clear();
+                        foreach (ListViewItem listItem in listViewFeedback.Items) {
+                            if (listItem.Tag.GetType() == typeof(CacheBuildMessage)) {
+                                var item = (CacheBuildMessage)listItem.Tag;
+                                if (project == null || item.Project.Equals(project))
+                                    listViewFeedback.Items.Remove(listItem);
+                            }
+                        }
+                    })
+                .OnIsInFocus(
+                    () => {
+                        if (Focused)
+                            return true;
+                        return Controls.Cast<Control>().Any(control => control.Focused);
+                    })
+                .OnUpdatePicture(
+                    (picture, state, information) => {
+                        if (pictureBoxWorking.ImageLocation != picture)
+                        {
+                            pictureBoxWorking.ImageLocation = picture;
+                            pictureBoxWorking.Refresh();
+                        }
+                        pictureBoxRed.Visible = state == ImageStates.Red;
+                        pictureMoose.Visible = state == ImageStates.Green;
+                        pictureBoxGray.Visible = state == ImageStates.None;
+                        pictureBoxWorking.Visible = state == ImageStates.Progress;
+                        _toolTipProvider.SetToolTip(pictureBoxWorking, information);
+                    })
+                .OnPrintMessage(
+                    (msg, color, normal) => {
+                        if (normal)
+                            label1.Font = new Font(label1.Font, FontStyle.Regular);
+                        else
+                            label1.Font = new Font(label1.Font, FontStyle.Bold);
+
+                        label1.Text = msg;
+                        label1.ForeColor = Color.FromName(color);
+                        label1.Refresh();
+                    })
+                .OnStoreSelected(
+                    () => {
+                        _selected = null;
+                        if (listViewFeedback.SelectedItems.Count == 1)
+                            _selected = listViewFeedback.SelectedItems[0].Tag;
+                        listViewFeedback.SuspendLayout();
+                    })
+                .OnRestoreSelected(
+                    (check) => {
+                        foreach (ListViewItem item in listViewFeedback.Items) {
+                            if (check(item.Tag, _selected)) {
+                                item.Selected = true;
+                                break;
+                            }
+                        }
+                        listViewFeedback.ResumeLayout();
+                        listViewFeedback.Refresh();
+                    })
+                .OnAddItem(
+                    (type, message, color, tag) => {
+                        string[] placeBefore = null;
+                        if (type == "Build warning")
+                            placeBefore = new[] { "Build warning", "Test ignored" };
+                        else if (type == "Test failed")
+                            placeBefore = new[] { "Test failed", "Build warning", "Test ignored" };
+                        else if (type == "Test ignored")
+                            placeBefore = new[] { "Test ignored" };
+                        var position = 0;
+                        if (placeBefore != null)
+                            position = getFirstItemPosition(placeBefore);
+                        var item = listViewFeedback.Items.Insert(position, type);
+                        item.SubItems.Add(message);
+                        item.ForeColor = Color.FromName(color);
+                        item.Tag = tag;
+                        /*if (isWindows()) {
+                            if (selected != null && tag.GetType() == selected.GetType() && tag.Equals(selected))
+                                item.Selected = true;
+                        }*/
+                    })
+                .OnRemoveBuildItem(
+                    (check) => {
+                        foreach (ListViewItem item in listViewFeedback.Items) {
+                            if (item.Tag.GetType() == typeof(CacheBuildMessage)) {
+                                if (check((CacheBuildMessage)item.Tag)) {
+                                    item.Remove();
+                                    break;
+                                }
+                            }
+                        }
+                    })
+                .OnRemoveTest(
+                    (check) => {
+                        foreach (ListViewItem item in listViewFeedback.Items) {
+                            if (item.Tag.GetType() == typeof(CacheTestMessage)) {
+                                if (check((CacheTestMessage)item.Tag)) {
+                                    item.Remove();
+                                    break;
+                                }
+                            }
+                        }
+                    })
+                .OnSetSummary(
+                    (m) => {
+                        _toolTipProvider.SetToolTip(label1, m);
+                    })
+                .OnExists(
+                    (check) => {
+                        foreach (ListViewItem item in listViewFeedback.Items) {
+                            if (check(item.Tag))
+                                return true;
+                        }
+                        return false;
+                    })
+                .OnGetSelectedItem(
+                    () => {
+                        if (listViewFeedback.SelectedItems.Count == 0)
+                            return null;
+                        return listViewFeedback.SelectedItems[0].Tag;
+                    })
+                .OnGetWidth(() => this.Width);
+
+            _provider.CanGoToTypes = CanGoToTypes;
+            _provider.ShowRunInformation = ShowRunInformation;
+            _provider.CanDebug = CanDebug;
+            _provider.Initialize();
+            _provider.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Collecting source and project information..."));			
+        }
+
         private TestDetailsForm _testDetails;
-        private readonly object _messagLock = new object();
-        private bool _isRunning;
-        private bool _progressUpdatedExternally;
-        private ImageStates _lastInternalState = ImageStates.None;
-        private readonly string _progressPicture;
-
-        private bool _showErrors = true;
-        private bool _showWarnings = true;
-        private bool _showFailing = true;
-        private bool _showIgnored = true;
-
+        
+        // Handle these and properties below 
         public event EventHandler<GoToReferenceArgs> GoToReference;
         public event EventHandler<GoToTypeArgs> GoToType;
         public event EventHandler<DebugTestArgs> DebugTest;
         public event EventHandler CancelRun;
 
         public bool CanGoToTypes { get; set; }
+        public bool ShowRunInformation { get; set; }
         public bool CanDebug { get; set; }
         public int ListViewWidthOffset { get; set; }
-        public bool ShowRunInformation { get; set; }
 
-        public bool ShowIcon
-        {
-            get
-            {
-                return pictureMoose.Visible;
-            }
-            set
-            {
+        public bool ShowIcon {
+            get { return pictureMoose.Visible; }
+            set {
                 pictureMoose.Visible = value;
                 label1.Left = pictureMoose.Left + pictureMoose.Width + 5;
 
             }
         }
 
-        public RunFeedback()
-        {
-            _syncContext = AsyncOperationManager.SynchronizationContext;
+        public RunFeedback() {
             InitializeComponent();
-            ShowIcon = true;
-            CanDebug = false;
-            CanGoToTypes = false;
-            ShowRunInformation = true;
             if (ListViewWidthOffset > 0)
                 listViewFeedback.Width = Width - ListViewWidthOffset;
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
         }
 
-        public new void Resize()
-        {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-        }
-
-        public void PrepareForFocus()
-        {
-            if (listViewFeedback.Items.Count > 0 && listViewFeedback.SelectedItems.Count == 0)
-                listViewFeedback.Items[0].Selected = true;
-            listViewFeedback.Select();
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-        }
-
-        public void ClearList()
-        {
-            listViewFeedback.Items.Clear();
-        }
-
-        public void ClearBuilds()
-        {
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                {
-                    listViewFeedback.Items.Remove(listItem);
-                }
-            }
-        }
-
-        public void ClearBuilds(string project)
-        {
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                {
-                    var item = (CacheBuildMessage)listItem.Tag;
-                    if (item.Project.Equals(project))
-                        listViewFeedback.Items.Remove(listItem);
-                }
-            }
-        }
-
-        public bool IsInFocus()
-        {
-            if (Focused)
-                return true;
-            return Controls.Cast<Control>().Any(control => control.Focused);
-        }
-
-        public void SetVisibilityConfiguration(bool showErrors, bool showWarnings, bool showFailingTests, bool showIgnoredTests)
-        {
-            _showErrors = showErrors;
-            _showWarnings = showWarnings;
-            _showFailing = showFailingTests;
-            _showIgnored = showIgnoredTests;
-            ClearList();
-        }
-
-        public bool isTheSameTestAs(CacheTestMessage original, CacheTestMessage item)
-        {
-            return original.Assembly.Equals(item.Assembly) && original.Test.Runner.Equals(item.Test.Runner) && original.Test.Name.Equals(item.Test.Name)  && original.Test.DisplayName.Equals(item.Test.DisplayName);
-        }
-
-        public void ConsumeMessage(object message)
-        {
-            if (message.GetType() == typeof(CacheMessages))
-                handle((CacheMessages)message);
-            else if (message.GetType() == typeof(LiveTestStatusMessage))
-                handle((LiveTestStatusMessage)message);
-            else if (message.GetType() == typeof(RunStartedMessage))
-                runStarted("Detected file changes...");
-            else if (message.GetType() == typeof(RunFinishedMessage))
-                runFinished((RunFinishedMessage)message);
-            else if (message.GetType() == typeof(RunInformationMessage))
-                runInformationMessage((RunInformationMessage)message);
-			else if (message.GetType() == typeof(BuildRunMessage)) {
-				if (((BuildRunMessage)message).Results.Errors.Length == 0)
-					ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
-			}
-        }
-
-        private void handle(CacheMessages cacheMessages)
-        {
-            _syncContext.Post(x =>
-            {
-                lock (_messagLock)
-                {
-                    Handle((CacheMessages)x);
-                    label1.Refresh();
-                }
-            }, cacheMessages);
-        }
-
-        private void handle(LiveTestStatusMessage liveTestStatusMessage)
-        {
-            _syncContext.Post(x =>
-            {
-                lock (_messagLock)
-                {
-                    Handle((LiveTestStatusMessage)x);
-                    label1.Refresh();
-                }
-            }, liveTestStatusMessage);
-        }
-
-        private void runStarted(string text)
-        {
-            _syncContext.Post(x =>
-            {
-                if (!ShowRunInformation)
-                    x = "processing changes...";
-                printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
-                generateSummary(null);
-                organizeListItemBehaviors(null);
-                clearRunnerTypeAnyItems();
-                setProgress(ImageStates.Progress, "processing changes...", false, null, true);
-                _isRunning = true;
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            }, text);
-        }
-
-        public void SetProgress(bool on, string information, string picture)
-        {
-            _progressUpdatedExternally = on;
-            var state = _lastInternalState;
-            if (on)
-                state = ImageStates.Progress;
-            setProgress(state, information, true, picture);
-        }
-
-        public void SetProgress(bool on, string information, ImageStates imageState)
-        {
-            _progressUpdatedExternally = on;
-            setProgress(imageState, information, true, null);
-        }
-
-        private void setProgress(ImageStates state, string information, bool external, string picture)
-        {
-            setProgress(state, information, external, picture, false);
-        }
-
-        private void setProgress(ImageStates state, string information, bool external, string picture, bool force)
-        {
-            if (!force && _progressUpdatedExternally && !external)
-                return;
-            if (picture == null)
-                picture = _progressPicture;
-            if (pictureBoxWorking.ImageLocation != picture)
-            {
-                pictureBoxWorking.ImageLocation = picture;
-                pictureBoxWorking.Refresh();
-            }
-            pictureBoxRed.Visible = state == ImageStates.Red;
-            pictureMoose.Visible = state == ImageStates.Green;
-            pictureBoxGray.Visible = state == ImageStates.None;
-            pictureBoxWorking.Visible = state == ImageStates.Progress;
-            _toolTipProvider.SetToolTip(pictureBoxWorking, information);
-            if (!external)
-                _lastInternalState = state;
-        }
-
-        private void runFinished(RunFinishedMessage msg)
-        {
-            _syncContext.Post(x =>
-            {
-                if (((RunFinishedMessage)x).Report.Aborted)
-                {
-                    if (ShowRunInformation)
-                    {
-                        setProgress(ImageStates.None, "", false, null);
-                        printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
-                    }
-                }
-                else
-                {
-                    var i = getRunFinishedInfo((RunFinishedMessage)x);
-                    var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
-                    setProgress(runType == RunMessageType.Succeeded ? ImageStates.Green : ImageStates.Red, "", false, null);
-                    printMessage(new RunMessages(runType, i.Text));
-                    generateSummary(i.Report);
-                }
-                _isRunning = false;
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            }, msg);
-        }
-
-        private RunFinishedInfo getRunFinishedInfo(RunFinishedMessage message)
-        {
-            var report = message.Report;
-            var text = string.Format(
-                        "Ran {0} build(s) ({1} succeeded, {2} failed) and {3} test(s) ({4} passed, {5} failed, {6} ignored)",
-                        report.NumberOfProjectsBuilt,
-                        report.NumberOfBuildsSucceeded,
-                        report.NumberOfBuildsFailed,
-                        report.NumberOfTestsRan,
-                        report.NumberOfTestsPassed,
-                        report.NumberOfTestsFailed,
-                        report.NumberOfTestsIgnored);
-            var succeeded = !(report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0);
-            return new RunFinishedInfo(text, succeeded, report);
-        }
-
-        private void runInformationMessage(RunInformationMessage msg)
-        {
-            _syncContext.Post(x =>
-            {
-                if (!_isRunning)
-                    return;
-                var text = "";
-                var message = (RunInformationMessage)x;
-                switch (message.Type)
-                {
-                    case InformationType.Build:
-                        if (ShowRunInformation)
-                            text = string.Format("building {0}", Path.GetFileName(message.Project));
-                        break;
-                    case InformationType.TestRun:
-                        text = "testing...";
-                        break;
-                    case InformationType.PreProcessing:
-                        if (ShowRunInformation)
-                            text = "locating affected tests";
-                        break;
-                }
-                if (text != "") {
-                    setProgress(ImageStates.Progress, text.ToString(), false, null);
-                    printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
-                }
-            }, msg);
-        }
-
-        public void PrintMessage(RunMessages message)
-        {
-            _syncContext.Post(x => printMessage((RunMessages)x), message);
-        }
-
-        private void printMessage(RunMessages message)
-        {
-            var msg = message;
-            label1.Text = msg.Message;
-            if (msg.Type == RunMessageType.Normal)
-            {
-                label1.ForeColor = Color.Black;
-                label1.Font = new Font(label1.Font, FontStyle.Regular);
-            }
-            if (msg.Type == RunMessageType.Succeeded)
-            {
-                label1.ForeColor = Color.Green;
-                label1.Font = new Font(label1.Font, FontStyle.Bold);
-            }
-            if (msg.Type == RunMessageType.Failed)
-            {
-                label1.ForeColor = Color.Red;
-                label1.Font = new Font(label1.Font, FontStyle.Bold);
-            }
-            label1.Refresh();
-        }
-
-        private new void Handle(CacheMessages cache)
-        {
-            object selected = null;
-            if (listViewFeedback.SelectedItems.Count == 1)
-                selected = listViewFeedback.SelectedItems[0].Tag;
-
-            listViewFeedback.SuspendLayout();
-            removeItems(cache);
-            if (_showErrors)
-            {
-                foreach (var error in cache.ErrorsToAdd)
-                    addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error, selected, 0);
-            }
-
-            if (_showFailing)
-            {
-                var position = getFirstItemPosition(new[] { "Test failed", "Build warning", "Test ignored" });
-                foreach (var failed in cache.FailedToAdd)
-                    addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed, selected, position);
-            }
-
-            if (_showWarnings)
-            {
-                var position = getFirstItemPosition(new[] { "Build warning", "Test ignored" });
-                foreach (var warning in cache.WarningsToAdd)
-                    addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning, selected, position);
-            }
-
-            if (_showIgnored)
-            {
-                var position = getFirstItemPosition(new[] { "Test ignored" });
-                foreach (var ignored in cache.IgnoredToAdd)
-                    addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected, position);
-            }
-            listViewFeedback.ResumeLayout();
-        }
-
-        private new void Handle(LiveTestStatusMessage liveStatus)
-        {
-            if (!_isRunning)
-                return;
-
-            listViewFeedback.SuspendLayout();
-            var ofCount = liveStatus.TotalNumberOfTests > 0 ? string.Format(" of {0}", liveStatus.TotalNumberOfTests) : "";
-            var testName = liveStatus.CurrentTest;
-            if (testName.Trim().Length > 0)
-                testName += " in ";
-            printMessage(new RunMessages(RunMessageType.Normal, string.Format("testing {3}{0} ({1}{2} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted, ofCount, testName)));
-
-            if (_showFailing)
-            {
-                foreach (var test in liveStatus.FailedButNowPassingTests)
-                {
-                    var testItem = new CacheTestMessage(test.Assembly, test.Test);
-                    foreach (ListViewItem item in listViewFeedback.Items)
-                    {
-                        if (item.Tag.GetType() != typeof(CacheTestMessage))
-                            continue;
-                        var itm = (CacheTestMessage)item.Tag;
-                        if (isTheSameTestAs(itm, testItem))
-                        {
-                            item.Remove();
-                            break;
-                        }
-                    }
-                }
-
-                object selected = null;
-                if (listViewFeedback.SelectedItems.Count == 1)
-                    selected = listViewFeedback.SelectedItems[0].Tag;
-                foreach (var test in liveStatus.FailedTests)
-                {
-                    var testItem = new CacheTestMessage(test.Assembly, test.Test);
-                    ListViewItem toRemove = null;
-                    foreach (ListViewItem item in listViewFeedback.Items)
-                    {
-                        if (item.Tag.GetType() != typeof(CacheTestMessage))
-                            continue;
-                        var itm = (CacheTestMessage)item.Tag;
-                        if (isTheSameTestAs(itm, testItem))
-                        {
-                            toRemove = item;
-                            break;
-                        }
-                    }
-                    int index = toRemove == null ? 0 : toRemove.Index;
-                    if (toRemove != null)
-                        toRemove.Remove();
-                    addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem, selected, index);
-                }
-            }
-            listViewFeedback.ResumeLayout();
-        }
-
-        private void clearRunnerTypeAnyItems()
-        {
-            var toRemove = new List<ListViewItem>();
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheTestMessage))
-                {
-                    var item = (CacheTestMessage)listItem.Tag;
-                    if (item.Test.Runner == TestRunner.Any)
-                        toRemove.Add(listItem);
-                }
-            }
-            toRemove.ForEach(x => listViewFeedback.Items.Remove(x));
+        public new void Resize() {
+            if (_provider != null)
+                _provider.ReOrganize();
         }
 
         private int getFirstItemPosition(string[] placeBefore)
@@ -443,76 +230,18 @@ namespace AutoTest.UI
             return position;
         }
 
-        private void removeItems(CacheMessages cache)
-        {
-            var toRemove = new List<ListViewItem>();
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                {
-                    var item = (CacheBuildMessage)listItem.Tag;
-                    if (cache.ErrorsToRemove.Count(x => x.Equals(item)) > 0 || cache.WarningsToRemove.Count(x => x.Equals(item)) > 0)
-                        toRemove.Add(listItem);
-                }
-                if (listItem.Tag.GetType() == typeof(CacheTestMessage))
-                {
-                    var item = (CacheTestMessage)listItem.Tag;
-                    if (existsIn(cache.TestsToRemove, item))
-                        toRemove.Add(listItem);
-                }
-            }
-            toRemove.ForEach(x => listViewFeedback.Items.Remove(x));
-        }
-
-        private bool existsIn(IEnumerable<CacheTestMessage> cacheTestMessages, CacheTestMessage item)
-        {
-            var query = from i in cacheTestMessages
-                        where i.Assembly.Equals(item.Assembly) && i.Test.Runner.Equals(item.Test.Runner) && i.Test.Name.Equals(item.Test.Name)
-                        select i;
-            return query.Any();
-        }
-
-        private void addFeedbackItem(string type, string message, Color colour, object tag, object selected, int position)
-        {
-            if (testExists(tag))
-                return;
-            var item = listViewFeedback.Items.Insert(position, type);
-            item.SubItems.Add(message);
-            item.ForeColor = colour;
-            item.Tag = tag;
-            if (selected != null && tag.GetType() == selected.GetType() && tag.Equals(selected))
-                item.Selected = true;
-        }
-
-        private bool testExists(object tag)
-        {
-            if (tag.GetType() != typeof(CacheTestMessage))
-                return false;
-            var test = (CacheTestMessage)tag;
-            return (from ListViewItem item in listViewFeedback.Items where item.Tag.GetType() == typeof (CacheTestMessage) select (CacheTestMessage) item.Tag).Any(itm => isTheSameTestAs(test, itm));
-        }
-
-        private string formatBuildResult(CacheBuildMessage item)
-        {
-            return string.Format("{0}, {1}", item.BuildItem.ErrorMessage, item.BuildItem.File);
-        }
-
-        private string formatTestResult(CacheTestMessage item)
-        {
-            return string.Format("{0} -> ({1}) {2}", item.Test.Status, item.Test.Runner.ToString(), item.Test.DisplayName);
+        private bool isWindows() {
+            return 
+                Environment.OSVersion.Platform == PlatformID.Win32S ||
+                Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform == PlatformID.WinCE ||
+                Environment.OSVersion.Platform == PlatformID.Xbox;
         }
 
         private void listViewFeedback_SelectedIndexChanged(object sender, EventArgs e)
         {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-        }
-
-        private void organizeListItemBehaviors(ListView.SelectedListViewItemCollection collection)
-        {
-            using (var handler = new ListItemBehaviourHandler(this))
-            {
-                handler.Organize(collection, _isRunning);
-            }
+            _provider.ReOrganize();
         }
 
         private void listViewFeedback_DoubleClick(object sender, EventArgs e)
@@ -521,71 +250,7 @@ namespace AutoTest.UI
                 return;
 
             var item = listViewFeedback.SelectedItems[0].Tag;
-            if (item.GetType() == typeof(CacheBuildMessage))
-                goToBuildItemReference((CacheBuildMessage)item);
-            if (item.GetType() == typeof(CacheTestMessage))
-                goToTestItemReference((CacheTestMessage)item);
-        }
-
-        private void goToBuildItemReference(CacheBuildMessage buildItem)
-        {
-            goToReference(buildItem.BuildItem.File, buildItem.BuildItem.LineNumber, buildItem.BuildItem.LinePosition);
-        }
-
-        private void goToTestItemReference(CacheTestMessage testItem)
-        {
-            if (testItem.Test.StackTrace.Length > 0)
-            {
-				var exactLine = getMatchingStackLine(testItem);
-				if (exactLine != null) {
-					goToReference(exactLine.File, exactLine.LineNumber, 0);
-					return;
-				}
-				
-                if (CanGoToTypes)
-                    if (goToType(testItem.Assembly, testItem.Test.Name))
-                        return;
-            }
-        }
-
-		private IStackLine getMatchingStackLine(CacheTestMessage testItem)
-		{
-			foreach (var line in testItem.Test.StackTrace) {
-				if (line.Method.Equals(testItem.Test.Name))
-					return line;
-			}
-            var lastWithLine = testItem.Test.StackTrace.LastOrDefault(x => x.LineNumber > 0);
-            if (lastWithLine != null)
-                return lastWithLine;
-
-			return null;
-		}
-
-        private void goToReference(string file, int lineNumber, int column)
-        {
-            if (GoToReference != null)
-                GoToReference(this, new GoToReferenceArgs(new CodePosition(file, lineNumber, column)));
-        }
-
-        private bool goToType(string assembly, string typename)
-        {
-            var type = typename.Replace("+", ".");
-            var args = new GoToTypeArgs(assembly, type);
-            if (GoToType != null)
-                GoToType(this, args);
-            return args.Handled;
-        }
-
-        private void generateSummary(RunReport report)
-        {
-            if (report == null)
-            {
-                _toolTipProvider.RemoveAll();
-                return;
-            }
-
-            var builder = new SummaryBuilder(report);
-            _toolTipProvider.SetToolTip(label1, builder.Build());
+            _provider.GoTo(item);
         }
 
         private void linkLabelDebugTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -710,7 +375,7 @@ namespace AutoTest.UI
                 y = _testDetails.Top;
             }
 
-            _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType, x, y, message, caption, links, maxWidth);
+            _testDetails = new TestDetailsForm((file, line) => _provider.GoTo(file, line, 0), (assembly, type) => _provider.GoTo(assembly, type), x, y, message, caption, links, maxWidth);
             _testDetails.Show();
             _testDetails.BringToFront();
         }
@@ -723,7 +388,7 @@ namespace AutoTest.UI
 
         private void RunFeedback_Resize(object sender, EventArgs e)
         {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            _provider.ReOrganize();
         }
 
         private void listViewFeedback_Resize(object sender, EventArgs e)
@@ -731,6 +396,7 @@ namespace AutoTest.UI
             listViewFeedback.Columns[1].Width = listViewFeedback.Width - (listViewFeedback.Columns[0].Width + 25);
         }
     }
+
 
     public class GoToReferenceArgs : EventArgs
     {

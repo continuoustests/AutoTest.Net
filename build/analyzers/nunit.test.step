@@ -145,22 +145,23 @@
   
   <target name="run_tests" depends="prepare" description="Running Unit Tests">
   
-    <if test="${dlls.test !=''}">
-      <echo message="Running tests using NUnit and putting results in ${dirs.test_results}."/>
-	  <echo message="${app.nunit.console} ${args.test_runner}"/>
-	  <echo message="Working directory ${dirs.build.code}"/>
-      <exec 
-          program="${app.nunit.console}" 
-          workingdir="${dirs.build.code}"
-          failonerror="true">
-        <arg value="${args.test_runner}" />
-      </exec>
-      <property name="tests.ran" value="true" />
-    </if>
-    <if test="${dlls.test ==''}">
-      <echo message="No test dlls to run against" />
-    </if>
-   
+  	<if test="${platform::is-windows()}">
+		<if test="${dlls.test !=''}">
+		  <echo message="Running tests using NUnit and putting results in ${dirs.test_results}."/>
+		  <echo message="${app.nunit.console} ${args.test_runner}"/>
+		  <echo message="Working directory ${dirs.build.code}"/>
+		  <exec 
+			  program="${app.nunit.console}" 
+			  workingdir="${dirs.build.code}"
+			  failonerror="true">
+			<arg value="${args.test_runner}" />
+		  </exec>
+		  <property name="tests.ran" value="true" />
+		</if>
+		<if test="${dlls.test ==''}">
+		  <echo message="No test dlls to run against" />
+		</if>
+   </if>
   </target>
 
   <target name="generate_report">

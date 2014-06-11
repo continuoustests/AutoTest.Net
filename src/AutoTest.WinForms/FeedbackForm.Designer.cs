@@ -29,7 +29,6 @@ namespace AutoTest.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FeedbackForm));
             this.runFeedback = new AutoTest.UI.RunFeedback();
             this.SuspendLayout();
             // 
@@ -56,9 +55,9 @@ namespace AutoTest.WinForms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(941, 219);
             this.Controls.Add(this.runFeedback);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FeedbackForm";
             this.Text = "AutoTest.Net";
+            this.Resize += new System.EventHandler(this.FeedbackFormResize);
             this.ResumeLayout(false);
 
         }

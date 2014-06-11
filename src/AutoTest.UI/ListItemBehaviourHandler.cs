@@ -6,68 +6,88 @@ using AutoTest.Messages;
 
 namespace AutoTest.UI
 {
+    public interface IListItemBehaviour
+    {
+        int Left { get; set; }
+        int Width { get; set; }
+        string Name { get; }
+        bool Visible { get; set; }
+
+    }
+
     class ListItemBehaviourHandler : IDisposable
     {
-        private RunFeedback _control;
-        private List<KeyValuePair<string, Control>> _controls = new List<KeyValuePair<string, Control>>();
+        private FeedbackProvider _provider;
+        private IListItemBehaviour _cancelRun;
+        private IListItemBehaviour _debugTest;
+        private IListItemBehaviour _testDetails;
+        private IListItemBehaviour _errorDescription;
+        private List<KeyValuePair<string, IListItemBehaviour>> _controls = new List<KeyValuePair<string, IListItemBehaviour>>();
 
-        public ListItemBehaviourHandler(RunFeedback control)
+        public ListItemBehaviourHandler(
+            FeedbackProvider provider,
+            IListItemBehaviour cancelRun,
+            IListItemBehaviour debugTest,
+            IListItemBehaviour testDetails,
+            IListItemBehaviour errorDescription)
         {
-            _control = control;
-            addControl(_control.linkLabelCancelRun);
-            if (control.CanDebug)
-                addControl(_control.linkLabelDebugTest);
-            addControl(_control.linkLabelTestDetails);
-            addControl(_control.linkLabelErrorDescription);
+            _provider = provider;
+            _cancelRun = cancelRun;
+            _debugTest = debugTest;
+            _testDetails = testDetails;
+            _errorDescription = errorDescription;
+            addControl(_cancelRun);
+            if (_provider.CanDebug)
+                addControl(_debugTest);
+            addControl(_testDetails);
+            addControl(_errorDescription);
         }
 
-        private void addControl(Control control)
+        private void addControl(IListItemBehaviour control)
         {
-            _controls.Add(new KeyValuePair<string, Control>(control.Name, control));
+            _controls.Add(new KeyValuePair<string, IListItemBehaviour>(control.Name, control));
         }
 
-        public void Organize(ListView.SelectedListViewItemCollection selectedItems, bool isRunning)
+        public void Organize(object item, bool isRunning)
         {
-            if (selectedItems == null)
+            if (item == null)
                 onNothing(isRunning);
-            else if (selectedItems.Count != 1)
-                onNothing(isRunning);
-            else if (selectedItems[0].Tag.GetType() == typeof(CacheBuildMessage))
-                onBuildMessage((CacheBuildMessage)selectedItems[0].Tag, isRunning);
-            else if (selectedItems[0].Tag.GetType() == typeof(CacheTestMessage))
-                onTestMessage((CacheTestMessage)selectedItems[0].Tag, isRunning);
+            else if (item.GetType() == typeof(CacheBuildMessage))
+                onBuildMessage((CacheBuildMessage)item, isRunning);
+            else if (item.GetType() == typeof(CacheTestMessage))
+                onTestMessage((CacheTestMessage)item, isRunning);
         }
 
         private void onBuildMessage(CacheBuildMessage cacheBuildMessage, bool isRunning)
         {
             if (isRunning)
-                displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name, _control.linkLabelCancelRun.Name });
+                displayAndOrder(new string[] { _errorDescription.Name, _cancelRun.Name });
             else
-                displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name });
+                displayAndOrder(new string[] { _errorDescription.Name });
             
         }
 
         private void onTestMessage(CacheTestMessage cacheTestMessage, bool isRunning)
         {
             var controls = new List<string>();
-            controls.Add(_control.linkLabelTestDetails.Name);
-            controls.Add(_control.linkLabelDebugTest.Name);
+            controls.Add(_testDetails.Name);
+            controls.Add(_debugTest.Name);
             if (isRunning)
-                controls.Add(_control.linkLabelCancelRun.Name);
+                controls.Add(_cancelRun.Name);
             displayAndOrder(controls.ToArray());
         }
 
         private void onNothing(bool isRunning)
         {
             if (isRunning)
-                displayAndOrder(new string[] { _control.linkLabelCancelRun.Name });
+                displayAndOrder(new string[] { _cancelRun.Name });
             else
                 displayAndOrder(new string[] { });
         }
 
         private void displayAndOrder(string[] controlsToShow)
         {
-            var nextControlPosition = _control.Width - 5;
+            var nextControlPosition = _provider.Width - 5;
             foreach (var control in _controls)
             {
                 if (controlsToShow.Contains(control.Key))
@@ -84,8 +104,10 @@ namespace AutoTest.UI
 
         public void Dispose()
         {
-            _controls = null;
-            _control = null;
+            _cancelRun = null;
+            _debugTest = null;
+            _testDetails = null;
+            _errorDescription = null;
         }
     }
 }

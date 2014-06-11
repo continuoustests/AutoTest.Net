@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoTest.WinForms.Test</RootNamespace>
     <AssemblyName>AutoTest.WinForms.Test</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -53,21 +52,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Rhino.Mocks">
       <HintPath>..\..\lib\Rhino.Mocks.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -79,6 +73,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WatchDirectoryPickerFormTest.cs" />
+    <Compile Include="ArgumentParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.TestCore\AutoTest.TestCore.csproj">

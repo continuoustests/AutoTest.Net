@@ -42,6 +42,7 @@ namespace AutoTest.Core.FileSystem
         private bool _paused = true;
         private string _ignorePath = "";
         private bool _isWatchingSolution = false;
+        private string _localConfigurationLocation = null;
 
         public bool IsPaused { get { return _paused; } }
 
@@ -58,6 +59,11 @@ namespace AutoTest.Core.FileSystem
             _solutionHanlder = solutionHanlder;
             if (!_configuration.StartPaused)
                 Resume();
+        }
+
+        public void LocalConfigurationIsLocatedAt(string path)
+        {
+            _localConfigurationLocation = path;
         }
 
         public void Pause()
@@ -141,7 +147,10 @@ namespace AutoTest.Core.FileSystem
 		
 		private void mergeLocalConfig(string path)
 		{
-            var file = new ConfigurationLocator().GetConfiguration(_configuration.WatchToken);
+            var localConfigPath = _configuration.WatchToken;
+            if (_localConfigurationLocation != null)
+                localConfigPath = _localConfigurationLocation;
+            var file = new ConfigurationLocator().GetConfiguration(localConfigPath);
 			if (File.Exists(file))
 				_bus.Publish(new InformationMessage("Loading local config file " + file));
 			_configuration.Reload(file);
