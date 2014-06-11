@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eberhard Beilharz")]
 [assembly: AssemblyProduct("AutoTest.NET")]
-[assembly: AssemblyCopyright("(c) 2013 Eberhard Beilharz")]
+[assembly: AssemblyCopyright("(c) 2013-2014 Eberhard Beilharz")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
