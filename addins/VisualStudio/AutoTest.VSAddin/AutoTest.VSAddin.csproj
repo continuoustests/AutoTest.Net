@@ -135,6 +135,7 @@
     <Content Include="AutoTest.VSAddin2008.AddIn" />
     <Content Include="AutoTest.VSAddin2010.AddIn" />
     <Content Include="AutoTest.VSAddin2011.AddIn" />
+    <Content Include="AutoTest.VSAddin2013.AddIn" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FeedbackWindow.resx">

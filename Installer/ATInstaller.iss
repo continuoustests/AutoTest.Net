@@ -37,6 +37,7 @@ Source: "..\ReleaseBinaries\AutoTest.VSAddin.dll"; DestDir: "{app}"; Flags: igno
 Source: "..\ReleaseBinaries\AutoTest.VSAddin2008.Addin"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\AutoTest.VSAddin2010.Addin"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\AutoTest.VSAddin2011.Addin"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\ReleaseBinaries\AutoTest.VSAddin2013.Addin"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\VSMenuKiller.exe"; DestDir: "{app}"; Flags: ignoreversion;
 
 Source: "..\ReleaseBinaries\Icons\circleFAIL.png"; DestDir: "{app}\Icons"; Flags: ignoreversion
@@ -92,6 +93,9 @@ Source: "..\ReleaseBinaries\progress.gif"; DestDir: "{app}"; Flags: ignoreversio
 Name: "{group}\{cm:UninstallProgram,AutoTest.Net}"; Filename: "{uninstallexe}"
 
 [Registry]
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\12.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\12.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\12.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\11.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\11.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\11.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
@@ -106,18 +110,29 @@ Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookI
 Filename:"{dotnet20}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registering Controls ..."; Flags: runhidden;
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\9.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2008Installed();
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2010Installed();
-Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2011Installed()
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2011Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\12.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2013Installed()
 
 [UninstallRun]
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\9.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2008Installed();
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2010Installed();
-Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2011Installed()
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2011Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\12.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2013Installed()
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.12.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2013 addin ..."; Flags: runhidden;
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2011 addin ..."; Flags: runhidden;
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2008 addin ..."; Flags: runhidden;
 Filename:"{dotnet20}\RegAsm.exe"; Parameters: /unregister AutoTest.VSAddin.dll; WorkingDir: {app}; StatusMsg: "Unregistering Controls ..."; Flags: runhidden;
 
 [Code]
+Function IfVS2013Installed() : Boolean;
+var
+  sPath: String;
+begin
+  sPath := ExpandConstant('{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\12.0,InstallDir}');
+  Result := FileExists(sPath + 'devenv.exe')
+end;
+
 Function IfVS2011Installed() : Boolean;
 var
   sPath: String;
