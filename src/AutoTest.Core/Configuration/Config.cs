@@ -42,6 +42,7 @@ namespace AutoTest.Core.Configuration
             }
         }
 
+		public List<KeyValuePair<string, string>> NUnitEnvironment { get; private set; }
         public string Providers { get; private set; }
         public string MSBuildAdditionalParameters { get; private set; }
         public int MSBuildParallelBuildCount { get; private set; }
@@ -168,12 +169,14 @@ namespace AutoTest.Core.Configuration
             mergeCodeEditor(core.CodeEditor);
 			if (core.DebuggingEnabled.WasReadFromConfig)
 				_debuggingEnabled = core.DebuggingEnabled.Value;
+			if (core.NUnitEnvironment.WasReadFromConfig)
+				NUnitEnvironment = mergeValueItem<List<KeyValuePair<string, string>>>(core.NUnitEnvironment, new List<KeyValuePair<string, string>>());
             if (core.MSBuildAdditionalParameters.WasReadFromConfig)
-                MSBuildAdditionalParameters = mergeValueItem(core.MSBuildAdditionalParameters, "");
+                MSBuildAdditionalParameters = mergeValueItem<string>(core.MSBuildAdditionalParameters, "");
             if (core.MSBuildParallelBuildCount.WasReadFromConfig)
-                MSBuildParallelBuildCount = mergeValueItem(core.MSBuildParallelBuildCount, 0);
+                MSBuildParallelBuildCount = mergeValueItem<int>(core.MSBuildParallelBuildCount, 0);
 			if (core.GrowlNotify.WasReadFromConfig)
-				GrowlNotify = mergeValueItem(core.GrowlNotify, null);
+				GrowlNotify = mergeValueItem<string>(core.GrowlNotify, null);
 			if (core.NotifyOnRunStarted.WasReadFromConfig)
 				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
 			if (core.NotifyOnRunCompleted.WasReadFromConfig)
@@ -183,7 +186,7 @@ namespace AutoTest.Core.Configuration
 			if (core.TestCategoriesToIgnore.WasReadFromConfig)
 				TestCategoriesToIgnore = mergeValues(TestCategoriesToIgnore, core.TestCategoriesToIgnore);
 			if (core.WatchIgnoreFile.WasReadFromConfig)
-				_ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
+				_ignoreFile = mergeValueItem<string>(core.WatchIgnoreFile, "");
 			if (core.FileChangeBatchDelay.WasReadFromConfig)
 				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
 			if (core.CustomOutputPath.WasReadFromConfig)
@@ -229,6 +232,7 @@ namespace AutoTest.Core.Configuration
                 _mspecTestRunner.AddRange(core.MSpecTestRunner.Value);
                 _codeEditor = core.CodeEditor.Value;
                 _debuggingEnabled = core.DebuggingEnabled.Value;
+				NUnitEnvironment = core.NUnitEnvironment.Value;
                 MSBuildAdditionalParameters = core.MSBuildAdditionalParameters.Value;
                 MSBuildParallelBuildCount = core.MSBuildParallelBuildCount.Value;
 				GrowlNotify = core.GrowlNotify.Value;
@@ -271,14 +275,7 @@ namespace AutoTest.Core.Configuration
 			return settingToMerge.Value;
 		}
 		
-		private string mergeValueItem(ConfigItem<string> settingToMerge, string defaultValue)
-		{
-			if (settingToMerge.ShouldExclude)
-				return defaultValue;
-			return settingToMerge.Value;
-		}
-
-        private int mergeValueItem(ConfigItem<int> settingToMerge, int defaultValue)
+		private T mergeValueItem<T>(ConfigItem<T> settingToMerge, T defaultValue)
         {
             if (settingToMerge.ShouldExclude)
                 return defaultValue;

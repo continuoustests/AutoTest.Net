@@ -13,5 +13,10 @@ namespace AutoTest.Core.BuildRunners
         {
             OptimisticBuildStrategy = optimisticBuildStrategy;
         }
+
+		public void SetOptimisticBuildStrategy(Func<string, string, bool> optimisticBuildStrategy)
+		{
+			OptimisticBuildStrategy = optimisticBuildStrategy;
+		}
     }
 }

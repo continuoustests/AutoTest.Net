@@ -102,8 +102,8 @@ namespace AutoTest.Core.ReflectionProviders
 
         public void Dispose()
         {
-            if (_assembly != null)
-                _assembly.Dispose();
+//            if (_assembly != null && _assembly is IDisposable)
+//                _assembly.Dispose();
         }
 
         private SimpleType locate(string type)

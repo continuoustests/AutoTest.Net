@@ -1,0 +1,6 @@
+<WorkspaceItem ctype="Workspace">
+  <Items>
+    <Item>../AutoTest.MDAddin.sln</Item>
+    <Item>../../VisualStudio/AutoTest.VSAddin.sln</Item>
+  </Items>
+</WorkspaceItem>

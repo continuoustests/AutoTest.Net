@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>AutoTest.Messages</RootNamespace>
     <AssemblyName>AutoTest.Messages</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>

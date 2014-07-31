@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{19837EC5-6DFA-4650-AE5F-E0E44F581B98}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AutoTest.MDAddin</RootNamespace>
+    <AssemblyName>AutoTest.MDAddin</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\..\.local\share\MonoDevelop-4.0\LocalInstall\Addins\AutoTest.MDAddin\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Execute" command="/opt/monodevelop/lib/monodevelop/bin/MonoDevelop.exe" workingdir="/opt/monodevelop/lib/monodevelop/bin/" />
+      </CustomCommands>
+    </CustomCommands>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="DISPLAY" value=":2" />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.TextEditor">
+      <HintPath>\opt\monodevelop\lib\monodevelop\bin\Mono.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.Core">
+      <HintPath>\opt\monodevelop\lib\monodevelop\bin\MonoDevelop.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoDevelop.Ide">
+      <HintPath>\opt\monodevelop\lib\monodevelop\bin\MonoDevelop.Ide.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging">
+      <HintPath>..\..\..\lib\Castle.Windsor\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="FSWatcher">
+      <HintPath>..\..\..\lib\FSWatcher\FSWatcher.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
+    </Reference>
+    <Reference Include="MonoDevelop.NUnit, Version=2.6.0.0, Culture=neutral">
+      <Private>False</Private>
+      <Package>monodevelop-core-addins</Package>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Listeners\FeedbackListener.cs" />
+    <Compile Include="ContinuousTestsPad.cs" />
+    <Compile Include="IFeedback.cs" />
+    <Compile Include="Commands\ResumeEngine.cs" />
+    <Compile Include="Commands\PauseEngine.cs" />
+    <Compile Include="Commands\About.cs" />
+    <Compile Include="Commands\TestCommands.cs" />
+    <Compile Include="Commands\RunTest.cs" />
+    <Compile Include="Commands\DebugTest.cs" />
+    <Compile Include="NUnitDebugTestRunner.cs" />
+    <Compile Include="Commands\GlobalConfiguration.cs" />
+    <Compile Include="Commands\LocalConfiguration.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\circleFAIL.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleFAIL.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleWIN.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleWIN.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleAbort.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleAbort.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\progress.gif">
+      <LogicalName>AutoTest.MDAddin.Resources.progress.gif</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoTest.MDAddin.addin.xml">
+      <LogicalName>AutoTest.MDAddin.addin.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MightyMoose.png">
+      <LogicalName>AutoTest.MDAddin.Resources.MightyMoose.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circlePaused.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circlePaused.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleBuildError.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleBuildError.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleBuildWarning.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleBuildWarning.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleInfo.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleInfo.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleTest.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleTest.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleTestIgnored.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleTestIgnored.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\circleOptimist.png">
+      <LogicalName>AutoTest.MDAddin.Resources.circleOptimist.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoTest.config.template.MD">
+      <LogicalName>AutoTest.config.template.MD</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <StandardHeader Text="Copyright (c) ${Year}, Eberhard Beilharz&#xA;Distributable under the terms of the MIT license (http://opensource.org/licenses/MIT)." IncludeInNewFiles="True" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Listeners\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Commands\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\AutoTest.Core\AutoTest.Core.csproj">
+      <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
+      <Name>AutoTest.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\AutoTest.Messages\AutoTest.Messages.csproj">
+      <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
+      <Name>AutoTest.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\AutoTest.UI\AutoTest.UI.csproj">
+      <Project>{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}</Project>
+      <Name>AutoTest.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
+      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
+      <Name>AutoTest.TestRunners.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
